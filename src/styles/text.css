@@ -1,0 +1,34 @@
+/*
+  General text stylings
+*/
+
+/* Fonts */
+.app-text-1 {
+  color: #CCCCCC;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.app-text-white {
+  color: white;
+}
+
+/* Sizes */
+.app-text-large {
+  font-size: 2rem;
+}
+
+.app-text-medium {
+  font-size: 1.5rem;
+}
+
+.app-text-small {
+  font-size: 1rem;
+}
+
+.app-text-smaller {
+  font-size: 0.9rem;
+}
+
+.app-text-tiny {
+  font-size: 0.8rem;
+}

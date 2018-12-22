@@ -1,16 +1,64 @@
+import { AppAuthService } from './auth/app-auth.service';
+import { AuthInterceptor } from './auth/auth-interceptor';
+import { ConnectionService } from './connection.service';
+import { AppRoutingModule } from './app-routing.module';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
+import { ProfilePageComponent } from './profile-page/profile-page.component';
+import { NavbarComponent } from './navbar/navbar.component';
+import { ProfileService } from './profile.service';
+import { LoginPageComponent } from './auth/login-page/login-page.component';
+
+import { SocialLoginModule, AuthServiceConfig } from "angularx-social-login";
+import { GoogleLoginProvider, FacebookLoginProvider, LinkedInLoginProvider} from "angularx-social-login";
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { DashboardComponent } from './dashboard/dashboard.component';
+import { SignupPageComponent } from './auth/signup-page/signup-page.component';
+import { UpdateDetailsComponent } from './update-details/update-details.component';
+
+let socialConfig = new AuthServiceConfig([
+  {
+    id: FacebookLoginProvider.PROVIDER_ID,
+    provider: new FacebookLoginProvider("302682943787752")
+  }
+
+]);
+
+export function provideConfig() {
+  return socialConfig;
+}
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    ProfilePageComponent,
+    NavbarComponent,
+    LoginPageComponent,
+    DashboardComponent,
+    SignupPageComponent,
+    UpdateDetailsComponent
   ],
   imports: [
-    BrowserModule
+    BrowserModule,
+    AppRoutingModule,
+    FormsModule,
+    ReactiveFormsModule,
+    SocialLoginModule,
+    HttpClientModule
   ],
-  providers: [],
+  providers: [
+    {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true},
+    {
+      provide: AuthServiceConfig,
+      useFactory: provideConfig
+    },
+    ProfileService,
+    AppAuthService,
+    ConnectionService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
