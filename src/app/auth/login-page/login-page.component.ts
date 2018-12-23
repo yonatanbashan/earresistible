@@ -26,11 +26,6 @@ export class LoginPageComponent implements OnInit {
       'password': new FormControl(null, Validators.required),
     });
 
-    this.authService.authState.subscribe((user) => {
-      // TODO: implement auth with Facebook
-      //console.log(user);
-      //this.appAuthService.login(this.loginForm.value.username, this.loginForm.value.password);
-    });
 
     this.appAuthService.getAuthDataListener().subscribe(status => {
       if (status) {
@@ -49,6 +44,9 @@ export class LoginPageComponent implements OnInit {
   }
 
   signInWithFB(): void {
+    this.authService.authState.subscribe((user) => {
+      this.appAuthService.login(user.email, user.authToken, true);
+    });
     this.authService.signIn(FacebookLoginProvider.PROVIDER_ID);
   }
 

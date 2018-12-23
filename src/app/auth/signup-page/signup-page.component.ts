@@ -1,3 +1,5 @@
+import { FacebookLoginProvider } from 'angularx-social-login';
+import { AuthService } from 'angularx-social-login';
 import { AppAuthService } from './../app-auth.service';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
@@ -11,6 +13,7 @@ import { Router } from '@angular/router';
 export class SignupPageComponent implements OnInit {
 
   constructor(
+    private authService: AuthService,
     private appAuthService: AppAuthService,
     private router: Router
   ) { }
@@ -33,6 +36,10 @@ export class SignupPageComponent implements OnInit {
   }
 
   signUpWithFB() {
+    this.authService.authState.subscribe((user) => {
+      this.appAuthService.addUser(user.email, user.authToken, true);
+    });
+    this.authService.signIn(FacebookLoginProvider.PROVIDER_ID);
   }
 
   onSubmit() {

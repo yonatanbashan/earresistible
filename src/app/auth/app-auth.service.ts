@@ -41,24 +41,32 @@ export class AppAuthService {
     return this.authDataListener;
   }
 
-  addUser(username: string, password: string) {
+  addUser(username: string, password: string, fb: boolean = false) {
     let request = {
       username: username,
       password: password,
-      email: ''
+      email: '',
+      fbToken: null
     }
     if (username.includes('@')) {
       request.email = username;
     }
+
+    if (fb) {
+      request.fbToken = password;
+    }
+
     this.http.post(this.serverAddress + 'api/users/add/', request)
     .subscribe((response: any) => {
       this.performLogin(response.token, response.expireLength);
     }, (error) => {
-      console.log(error);
+      if (error.error.code === 'MAIL_EXISTS') {
+        this.login(username, password, fb);
+      }
     });
   }
 
-  login(username: string, password: string) {
+  login(username: string, password: string, fb: boolean = false) {
     let queryArgs = '?';
 
     if  (username.includes('@')) {
@@ -69,6 +77,10 @@ export class AppAuthService {
     }
 
     queryArgs += `&password=${password}`;
+
+    if (fb) {
+      queryArgs += `&fbToken=${password}`;
+    }
 
     this.http.get(this.serverAddress + 'api/users/' + queryArgs)
     .subscribe((response: any) => {

@@ -12,14 +12,14 @@ const UserController = require('../controllers/users');
 // POST requests
 
 // Add new user
-router.post('/add', UserController.addUser);
+router.post('/add', UserController.verifyFBToken, UserController.addUser);
 
 
 
 // GET requests
 
 // Login and check existence
-router.get('', UserController.loginUser);
+router.get('', UserController.verifyFBToken, UserController.loginUser);
 
 
 

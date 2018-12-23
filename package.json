@@ -28,6 +28,7 @@
     "bootstrap": "^4.1.3",
     "core-js": "^2.5.4",
     "express": "^4.16.4",
+    "fb": "^2.0.0",
     "jsonwebtoken": "^8.4.0",
     "jwt-decode": "^2.2.0",
     "mongoose": "^5.4.0",
