@@ -67,7 +67,7 @@
           </div>
         </div>
 
-        <div class="d-flex flex-column">
+        <div class="d-flex flex-column" *ngIf="!isLoading">
           <button
             [disabled]="!formValid() || !signupForm.valid"
             type="submit"
@@ -76,13 +76,18 @@
           </button>
         </div>
 
-        <div class="d-flex flex-column">
+        <div class="d-flex flex-column" *ngIf="!isLoading">
           <button
             (click)="signUpWithFB()"
             type="button"
             class="btn btn-primary fb-button my-1 app-text-1 app-text-small">
             Sign up with Facebook
           </button>
+        </div>
+
+
+        <div class="d-flex flex-column" *ngIf="isLoading">
+          <app-spinner></app-spinner>
         </div>
 
       </form>

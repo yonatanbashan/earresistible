@@ -19,6 +19,13 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { SignupPageComponent } from './auth/signup-page/signup-page.component';
 import { UpdateDetailsComponent } from './update-details/update-details.component';
 import { ProfileEditComponent } from './profile-edit/profile-edit.component';
+import { ProfileItemComponent } from './profile-page/profile-item/profile-item.component';
+import { SpinnerComponent } from './spinner/spinner.component';
+
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatCardModule, MatProgressSpinnerModule, MatNativeDateModule, MatIconModule, MatCheckboxModule } from '@angular/material';
+import { MatDialogModule } from '@angular/material/dialog';
+
 
 let socialConfig = new AuthServiceConfig([
   {
@@ -41,7 +48,9 @@ export function provideConfig() {
     DashboardComponent,
     SignupPageComponent,
     UpdateDetailsComponent,
-    ProfileEditComponent
+    ProfileEditComponent,
+    ProfileItemComponent,
+    SpinnerComponent,
   ],
   imports: [
     BrowserModule,
@@ -49,9 +58,12 @@ export function provideConfig() {
     FormsModule,
     ReactiveFormsModule,
     SocialLoginModule,
-    HttpClientModule
+    HttpClientModule,
+    MatDatepickerModule,
+    MatNativeDateModule
   ],
   providers: [
+    MatDatepickerModule,
     {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true},
     {
       provide: AuthServiceConfig,

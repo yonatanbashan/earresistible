@@ -19,6 +19,7 @@ export class SignupPageComponent implements OnInit, OnDestroy {
     private router: Router
   ) { }
 
+  isLoading: boolean = false;
   signupForm: FormGroup;
   fbSubs: Subscription = new Subscription();
 
@@ -43,12 +44,14 @@ export class SignupPageComponent implements OnInit, OnDestroy {
 
   signUpWithFB() {
     this.fbSubs = this.authService.authState.subscribe((user) => {
+      this.isLoading = false;
       this.appAuthService.addUser(user.email, user.authToken, true);
     });
     this.authService.signIn(FacebookLoginProvider.PROVIDER_ID);
   }
 
   onSubmit() {
+    this.isLoading = true;
     this.appAuthService.addUser(this.signupForm.value.username, this.signupForm.value.password);
   }
 

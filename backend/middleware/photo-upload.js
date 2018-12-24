@@ -36,7 +36,7 @@ const multerS3Config = multerS3({
         .split(" ")
         .join("-");
         const ext = MIME_TYPE_MAP[file.mimetype];
-        const filename = appConfig.imagesFolder + '/' + name + "-" + Date.now() + "." + ext;
+        const filename = appConfig.imagesFolder + '/' + Date.now() + "-" + name;
         cb(null, filename);
     }
 });

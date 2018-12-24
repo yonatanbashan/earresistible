@@ -1,7 +1,10 @@
+import { AppAuthService } from './../auth/app-auth.service';
 import { ProfileService } from './../profile.service';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
+import { MatDatepickerModule } from '@angular/material/datepicker'
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-profile-edit',
@@ -12,19 +15,42 @@ export class ProfileEditComponent implements OnInit {
 
   constructor(
     private profService: ProfileService,
-    private router: Router
+    private appAuthService: AppAuthService,
+    private http: HttpClient,
+    private router: Router,
+    private route: ActivatedRoute
   ) { }
+
+  isLoading: boolean = false;
+  isDeletingImage: boolean = false;
+  isUpdating: boolean = false;
 
   profileEditForm: FormGroup;
   genres: string[];
   countries: string[];
   currentSubGenres: string[];
   isOtherGenre: boolean = false;
+  imagePreview: string;
 
   subGenres: Map<string, string[]>;
 
 
   ngOnInit() {
+
+    this.getCountries();
+
+    this.route.params.subscribe(params => {
+      if (!params['empty']) {
+        this.isLoading = true;
+        this.profService.getProfile(this.appAuthService.getAuthData().id)
+        .subscribe((response: any) => {
+          const profile = response.profile;
+          this.populateForm(profile);
+          this.isLoading = false;
+        });
+      }
+    });
+
     this.profileEditForm = new FormGroup({
       'artistName': new FormControl(null, Validators.required),
       'description': new FormControl(null),
@@ -34,7 +60,8 @@ export class ProfileEditComponent implements OnInit {
       'genreSelect': new FormControl(null),
       'otherGenre': new FormControl(null),
       'otherSubGenre': new FormControl(null),
-      'subGenreSelect': new FormControl(null)
+      'subGenreSelect': new FormControl(null),
+      'userImage': new FormControl(null)
     });
 
     this.genres = ['Rock', 'Pop', 'Hip Hop', 'Jazz', 'Electronic', 'Classical', 'Indie', 'Folk', 'Country'].sort();
@@ -54,8 +81,35 @@ export class ProfileEditComponent implements OnInit {
 
   }
 
+  // Once the profile data has arrived, need to populate the form
+  populateForm(profile: any) {
+    this.profileEditForm.patchValue({
+      artistName: profile.artistName,
+      description: profile.description,
+      bio: profile.bio,
+      countrySelect: profile.locationCountry,
+      city: profile.locationCity,
+    });
+
+    if (this.genres.includes(profile.genre)) {
+      this.isOtherGenre = false;
+      this.currentSubGenres = this.subGenres.get(profile.genre);
+      this.profileEditForm.patchValue({
+        genreSelect: profile.genre,
+        subGenreSelect: profile.subGenre
+      });
+    } else {
+      this.isOtherGenre = true;
+      this.profileEditForm.patchValue({
+        genreSelect: 'Other',
+        otherGenre: profile.genre,
+        otherSubGenre: profile.subGenre
+      });
+    }
+    this.imagePreview = profile.imagePath;
+  }
+
   onSelectGenre(e: Event) {
-    console.log('###: ' + this.profileEditForm.value.genreSelect);
     this.currentSubGenres = this.subGenres.get(this.profileEditForm.value.genreSelect);
     if (this.profileEditForm.value.genreSelect.includes('Other')) {
       this.isOtherGenre = true;
@@ -85,13 +139,41 @@ export class ProfileEditComponent implements OnInit {
       subGenre: subGenre,
     }
 
-    this.profService.updateProfile(profile)
+    this.isUpdating = true;
+    this.profService.updateProfile(profile, this.profileEditForm.value.userImage)
     .subscribe((response) => {
-      this.router.navigate(['/dashboard']);
+      this.isUpdating = false;
+      this.router.navigate(['/profile']);
     }, (error) => {
       console.log(error.error.message); // TODO: Better error handling
     });
 
+  }
+
+  getCountries() {
+    // TODO
+  }
+
+  onImagePicked(event: Event) {
+    const file = (event.target as HTMLInputElement).files[0];
+    this.profileEditForm.patchValue({ 'userImage': file });
+    this.profileEditForm.get('userImage').updateValueAndValidity();
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.imagePreview = <string>reader.result;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  onDeleteImage() {
+    this.isDeletingImage = true;
+    this.profService.deleteUserImage()
+    .subscribe(response => {
+      this.ngOnInit();
+      this.isDeletingImage = false;
+      this.imagePreview = '';
+      this.profileEditForm.patchValue({ 'userImage': null });
+    });
   }
 
 }

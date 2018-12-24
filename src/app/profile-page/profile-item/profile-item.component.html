@@ -1,0 +1,31 @@
+<div class="row align-items-center">
+  <div class="col-3">
+    <div class="row justify-content-center py-4 px-3">
+      <div class="release-image-cropper app-item-shadow-large">
+        <img [src]="release.imagePath" class="release-image my-0 mx-0" [title]="release.name">
+      </div>
+    </div>
+  </div>
+  <div class="col-9">
+    <div class="app-text-1 app-text-medium">
+      {{ release.name }}
+    </div>
+    <div class="app-text-1 app-text-small">
+      {{ release.type }}, {{ release.releaseDate.getFullYear() }}
+    </div>
+  </div>
+</div>
+<div class="container-fluid py-3">
+  <div class="row" *ngFor="let item of release.items">
+    <div class="col-9 offset-3 py-2">
+      <div class="row justify-content-between">
+        <div class="app-text-1 app-text-small">
+          {{ item.name }}
+        </div>
+        <div class="app-text-1 app-text-small">
+            {{ getLengthStr(item.length) }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,9 +1,10 @@
 const mongoose = require('mongoose');
 const uniqueValidator = require('mongoose-unique-validator');
+const appConfig = require('../common/app-config')
 
 const profileSchema = mongoose.Schema({
   artistName: { type: String, required: true},
-  imagePath: { type: String, default: ''},
+  imagePath: { type: String, default: appConfig.defaultPhoto},
   description: { type: String, default: ''},
   bio: { type: String, default: ''},
   locationCity: { type: String, default: ''},

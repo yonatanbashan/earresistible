@@ -63,7 +63,7 @@ export class AppAuthService {
       this.performLogin(response.token, response.expireLength);
       this.profService.addEmptyProfile(this.authData).subscribe((response: any) => {
         // What to do when profile is created
-        this.router.navigate(['/profile-edit']);
+        this.router.navigate(['/profile-edit', {empty: true}]);
       });
     }, (error) => {
       if (error.error.code === 'MAIL_EXISTS') {

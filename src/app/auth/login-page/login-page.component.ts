@@ -14,6 +14,7 @@ import { Subscription } from 'rxjs';
 export class LoginPageComponent implements OnInit, OnDestroy {
 
   loginForm: FormGroup
+  isLoading: boolean = false;
 
   constructor(
     private authService: AuthService,
@@ -32,6 +33,7 @@ export class LoginPageComponent implements OnInit, OnDestroy {
 
     this.appAuthService.getAuthDataListener().subscribe(status => {
       if (status) {
+        this.isLoading = false;
         this.router.navigate(['/dashboard']);
       }
     });
@@ -47,12 +49,15 @@ export class LoginPageComponent implements OnInit, OnDestroy {
   }
 
   onSubmit() {
+    this.isLoading = true;
     this.appAuthService.login(this.loginForm.value.username, this.loginForm.value.password);
   }
 
   signInWithFB(): void {
+    this.isLoading = true;
     this.fbSubs = this.authService.authState.subscribe((user) => {
       this.appAuthService.login(user.email, user.authToken, true);
+      this.isLoading = false;
     });
     this.authService.signIn(FacebookLoginProvider.PROVIDER_ID);
   }

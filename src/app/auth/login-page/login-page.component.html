@@ -50,7 +50,7 @@
         </div>
       </div>
 
-      <div class="d-flex row mx-0 py-2 justify-content-between">
+      <div class="d-flex row mx-0 py-2 justify-content-between" *ngIf="!isLoading">
         <button
           type="submit"
           class="btn btn-primary my-1 app-text-1 app-form-btn-text app-form-submit-btn"
@@ -65,13 +65,17 @@
         </button>
       </div>
 
-      <div class="d-flex flex-column">
+      <div class="d-flex flex-column" *ngIf="!isLoading">
         <button
           (click)="signInWithFB()"
           type="button"
           class="btn btn-primary fb-button my-1 app-text-1 app-text-white app-text-small">
           Login with Facebook
         </button>
+      </div>
+
+      <div class="d-flex flex-column" *ngIf="isLoading">
+        <app-spinner></app-spinner>
       </div>
 
     </form>

@@ -1,52 +1,79 @@
-<div class="d-flex container app-fullview-card justify-content-center align-items-center">
-    <div class="col-6 shadow app-card">
+<div class="d-flex container py-5 justify-content-center align-items-center">
+  <div class="col-9 shadow app-card" *ngIf="isLoading || isUpdating">
+    <app-spinner></app-spinner>
+    <div class="row">
+      <div class="col-12 text-center">
+        <div class="app-text-1 app-text-medium" *ngIf="isUpdating"><br><br><br>Updating profile...<br><br><br></div>
+      </div>
+    </div>
+  </div>
 
-      <div class="row justify-content-center">
-        <div class="col-12 py-3">
-          <div class="row justify-content-center">
-            <div class="app-text-1 app-text-medium">
-              Edit your profile
-            </div>
+  <div class="col-9 shadow app-card" *ngIf="!isLoading && !isUpdating">
+
+    <div class="row justify-content-center">
+      <div class="col-12 py-3">
+        <div class="row justify-content-center">
+          <div class="app-text-1 app-text-medium">
+            Edit your profile
           </div>
         </div>
       </div>
+    </div>
 
 
-      <form [formGroup]="profileEditForm" (ngSubmit)="onSubmit()" class="px-3 py-3">
+    <form [formGroup]="profileEditForm" (ngSubmit)="onSubmit()" class="px-3 py-3">
 
-        <div class="row py-2">
-          <label for="artistName" class="app-text-1 app-text-smaller">Artist Name</label>
-          <input
-            type="text"
-            name="artistName"
-            class="form-control"
-            placeholder="Your artist name"
-            id="artistName"
-            formControlName="artistName">
+      <div class="row py-2">
+        <label for="artistName" class="app-text-1 app-text-smaller">Artist Name</label>
+        <input
+          type="text"
+          name="artistName"
+          class="form-control"
+          placeholder="Your artist name"
+          id="artistName"
+          formControlName="artistName">
+      </div>
+
+      <div class="row py-2">
+        <label for="description" class="app-text-1 app-text-smaller">Description</label>
+        <input
+          type="text"
+          name="description"
+          class="form-control"
+          placeholder="Short description"
+          id="description"
+          formControlName="description">
+      </div>
+
+      <div class="row py-2">
+        <label for="bio" class="app-text-1 app-text-smaller">Bio</label>
+        <textarea
+          type="bio"
+          name="bio"
+          rows="6"
+          class="form-control app-text-tiny edit-bio"
+          placeholder="Your bio"
+          id="bio"
+          formControlName="bio"></textarea>
+      </div>
+
+      <div class="row py-2">
+        <div class="col-12">
+          <button mat-stroked-button type="button" class="btn btn-primary my-1 app-text-1 app-form-btn-text" (click)="filePicker.click()">Pick Image</button>
+          <input type="file" #filePicker (change)="onImagePicked($event)" hidden>
+          <button class="btn btn-primary mx-2 my-1 app-text-1 app-form-btn-text" type="button" (click)="onDeleteImage()">Delete Image</button>
         </div>
-
-        <div class="row py-2">
-          <label for="description" class="app-text-1 app-text-smaller">Description</label>
-          <input
-            type="text"
-            name="description"
-            class="form-control"
-            placeholder="Short description"
-            id="description"
-            formControlName="description">
+        <div class="col-6 my-2">
+            <div class="mx-0 px-0" *ngIf="imagePreview !== '' && imagePreview">
+                <img
+                [src]="imagePreview"
+                style="max-height: 200px; max-width: 200px;"
+                class="rounded">
+            </div>
         </div>
+      </div>
 
-        <div class="row py-2">
-          <label for="bio" class="app-text-1 app-text-smaller">Bio</label>
-          <textarea
-            type="bio"
-            name="bio"
-            rows="4"
-            class="form-control"
-            placeholder="Your bio"
-            id="bio"
-            formControlName="bio"></textarea>
-        </div>
+      <div class="col-4">
 
         <div class="row py-2">
           <label for="countrySelect" class="app-text-1 app-text-smaller">Country:</label>
@@ -119,6 +146,7 @@
           </button>
         </div>
 
-      </form>
-    </div>
+      </div>
+    </form>
   </div>
+</div>

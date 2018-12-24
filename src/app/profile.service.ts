@@ -1,7 +1,5 @@
 import { AuthData } from './models/auth-data.model';
-import { AppAuthService } from './auth/app-auth.service';
 import { ConnectionService } from './connection.service';
-import { Profile } from './models/profile.model';
 import { Injectable } from "@angular/core";
 import { HttpClient } from '@angular/common/http';
 
@@ -15,11 +13,53 @@ export class ProfileService {
 
   serverAddress = this.connService.getServerAddress();
 
-  updateProfile(profileInfo: any) {
-    const request = {
-      profileInfo: profileInfo
+  // updateUserInfo(info: any, image: File = null) {
+
+  //   let imageData = new FormData();
+  //   if(image !== null && image !== undefined) {
+  //     imageData.append("image", image);
+  //   }
+
+  //   imageData.append("headerText", info.headerText);
+  //   imageData.append("hideDate", info.hideDate);
+  //   imageData.append("birthDate", info.birthDate);
+
+  //   if(info.profileImagePath !== undefined) {
+  //     imageData.append("profileImagePath", info.profileImagePath);
+  //   }
+
+  //   return this.http.put(this.serverAddress + 'api/users/info/', imageData)
+  //   .subscribe(responseData => {
+  //     this.router.navigate(['/user', this.authService.getActiveUser()]);
+  //   });
+  // }
+
+  deleteUserImage() {
+    const queryParams = '?field=photo';
+    return this.http.delete(this.serverAddress + 'api/profiles/' + queryParams)
+  }
+
+  updateProfile(profileInfo: any, image: File = null) {
+
+    let profileData = new FormData();
+    if(image !== null && image !== undefined) {
+      profileData.append("image", image);
     }
-    return this.http.put(this.serverAddress + 'api/profiles/update/', request);
+
+    profileData.append("artistName", profileInfo.artistName);
+    profileData.append("description", profileInfo.description);
+    profileData.append("bio", profileInfo.bio);
+    profileData.append("locationCountry", profileInfo.locationCountry);
+    profileData.append("locationCity", profileInfo.locationCity);
+    profileData.append("genre", profileInfo.genre);
+    profileData.append("subGenre", profileInfo.subGenre);
+
+    if(profileInfo.imagePath !== undefined) {
+      profileInfo.append("imagePath", profileInfo.imagePath);
+    }
+
+    return this.http.put(this.serverAddress + 'api/profiles/update/', profileData)
+
   }
 
   addEmptyProfile(authData: AuthData) {

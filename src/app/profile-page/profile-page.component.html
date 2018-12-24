@@ -1,32 +1,43 @@
 <div class="container">
   <div class="row my-5">
-    <div class="col-12 shadow-lg app-card" *ngIf="!isLoadingProfile">
-      <div class="row align-items-center">
+    <div class="col-12 shadow-lg app-card">
+      <div *ngIf="isLoadingProfile" class="col-12"><app-spinner></app-spinner></div>
+
+      <div class="row align-items-center" *ngIf="!isLoadingProfile">
         <div class="col-4">
           <div class="row justify-content-center py-2">
-            <div class="profile-image-cropper">
+            <div class="profile-image-cropper app-item-shadow-large">
               <img [src]="profile.imagePath" class="profile-image my-2 mx-2" [title]="profile.artistName">
             </div>
           </div>
         </div>
         <div class="col-8">
-          <div class="app-text-1 app-text-large">
-            {{ profile.artistName }}
-          </div>
-          <div class="app-text-1 app-text-medium">
-            {{ profile.description }}
-          </div>
-          <div class="app-text-1 app-text-small" *ngIf="profile.genre !== ''" [title]="profile.subGenre">
-            {{ profile.genre }}
-          </div>
-          <div class="app-text-1 app-text-small" *ngIf="profile.locationCity !== '' && profile.locationCountry !== ''">
-            {{ profile.locationCity }}, {{ profile.locationCountry }}
-          </div>
-          <div class="app-text-1 app-text-small" *ngIf="profile.locationCity === ''">
-              {{ profile.locationCountry }}
-          </div>
-          <div class="app-text-1 app-text-small" *ngIf="profile.locationCountry === ''">
-              {{ profile.locationCity }}
+          <div class="row">
+            <div class="col-10">
+            <div class="app-text-1 app-text-large">
+              {{ profile.artistName }}
+            </div>
+            <div class="app-text-1 app-text-medium">
+              {{ profile.description }}
+            </div>
+            <div class="app-text-1 app-text-small" *ngIf="profile.genre !== ''" [title]="profile.subGenre">
+              {{ profile.genre }}
+            </div>
+            <div class="app-text-1 app-text-small" *ngIf="profile.locationCity !== '' && profile.locationCountry !== ''">
+              {{ profile.locationCity }}, {{ profile.locationCountry }}
+            </div>
+            <div class="app-text-1 app-text-small" *ngIf="profile.locationCity === ''">
+                {{ profile.locationCountry }}
+            </div>
+            <div class="app-text-1 app-text-small" *ngIf="profile.locationCountry === ''">
+                {{ profile.locationCity }}
+            </div>
+            </div>
+            <div class="col-2">
+              <button
+                class="btn btn-primary mx-3 my-2 app-text-1 app-form-btn-text"
+                (click)="onEditProfile()">Edit</button>
+            </div>
           </div>
         </div>
       </div>
@@ -34,39 +45,7 @@
   </div>
   <span *ngIf="!isLoadingReleases">
     <div class="row my-3" *ngFor="let release of profile.releases">
-      <div class="col-10 my-3 offset-1 shadow-lg app-card">
-        <div class="row align-items-center">
-          <div class="col-3">
-            <div class="row justify-content-center py-2">
-              <div class="release-image-cropper">
-                <img [src]="release.imagePath" class="release-image my-2 mx-2" [title]="release.name">
-              </div>
-            </div>
-          </div>
-          <div class="col-9">
-            <div class="app-text-1 app-text-medium">
-              {{ release.name }}
-            </div>
-            <div class="app-text-1 app-text-small">
-              {{ release.type }}, {{ release.releaseDate.getFullYear() }}
-            </div>
-          </div>
-        </div>
-        <div class="container-fluid py-3">
-          <div class="row" *ngFor="let item of release.items">
-            <div class="col-9 offset-3 py-2">
-              <div class="row justify-content-between">
-                <div class="app-text-1 app-text-small">
-                  {{ item.name }}
-                </div>
-                <div class="app-text-1 app-text-small">
-                    {{ getLengthStr(item.length) }}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <app-profile-item [release]="release" class="col-10 my-3 offset-1 shadow-lg app-card"></app-profile-item>
     </div>
   </span>
 </div>

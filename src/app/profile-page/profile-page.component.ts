@@ -1,9 +1,8 @@
-import { Release } from './../models/release.model';
 import { AppAuthService } from './../auth/app-auth.service';
 import { ProfileService } from './../profile.service';
-import { Song } from './../models/song.model';
 import { Profile } from './../models/profile.model';
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-profile-page',
@@ -14,7 +13,8 @@ export class ProfilePageComponent implements OnInit {
 
   constructor(
     private profileService: ProfileService,
-    private appAuthService: AppAuthService
+    private appAuthService: AppAuthService,
+    private router: Router
   ) { }
   profile: Profile;
   isLoadingProfile = false;
@@ -33,18 +33,9 @@ export class ProfilePageComponent implements OnInit {
 
   }
 
-  getLengthStr(length: number) {
-    const minutes = Math.floor(length/60);
-    const seconds = length % 60;
-    let secondsStr;
-    if (seconds < 10) {
-      secondsStr = '0' + seconds;
-    } else {
-      secondsStr = seconds;
-    }
-    return `${minutes}:${secondsStr}`;
+  onEditProfile() {
+    this.router.navigate(['/profile-edit']);
   }
-
 
 
 }
