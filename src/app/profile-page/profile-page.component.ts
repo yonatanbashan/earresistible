@@ -1,3 +1,5 @@
+import { Release } from './../models/release.model';
+import { AppAuthService } from './../auth/app-auth.service';
 import { ProfileService } from './../profile.service';
 import { Song } from './../models/song.model';
 import { Profile } from './../models/profile.model';
@@ -11,13 +13,24 @@ import { Component, OnInit } from '@angular/core';
 export class ProfilePageComponent implements OnInit {
 
   constructor(
-    private profileService: ProfileService
+    private profileService: ProfileService,
+    private appAuthService: AppAuthService
   ) { }
   profile: Profile;
+  isLoadingProfile = false;
+  isLoadingReleases = false;
 
   ngOnInit() {
 
-    this.profile = this.profileService.getProfile();
+    this.isLoadingProfile = true;
+    this.isLoadingReleases = true;
+    this.profileService.getProfile(this.appAuthService.getAuthData().id).subscribe((response: any) => {
+      this.profile = response.profile;
+      this.profile.releases = this.profileService.getReleases();
+      this.isLoadingProfile = false;
+      this.isLoadingReleases = false;
+    });
+
   }
 
   getLengthStr(length: number) {

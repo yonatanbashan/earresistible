@@ -18,6 +18,7 @@ import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { SignupPageComponent } from './auth/signup-page/signup-page.component';
 import { UpdateDetailsComponent } from './update-details/update-details.component';
+import { ProfileEditComponent } from './profile-edit/profile-edit.component';
 
 let socialConfig = new AuthServiceConfig([
   {
@@ -39,7 +40,8 @@ export function provideConfig() {
     LoginPageComponent,
     DashboardComponent,
     SignupPageComponent,
-    UpdateDetailsComponent
+    UpdateDetailsComponent,
+    ProfileEditComponent
   ],
   imports: [
     BrowserModule,

@@ -8,10 +8,12 @@ import { RouterModule, Routes } from '@angular/router';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { SignupPageComponent } from './auth/signup-page/signup-page.component';
 import { UpdateDetailsComponent } from './update-details/update-details.component';
+import { ProfileEditComponent } from './profile-edit/profile-edit.component';
 
 
 const appRoutes: Routes = [
   { path: 'profile', component: ProfilePageComponent, canActivate: [AuthGuard] },
+  { path: 'profile-edit', component: ProfileEditComponent, canActivate: [AuthGuard] },
   { path: 'details', component: UpdateDetailsComponent, canActivate: [AuthGuard] },
   { path: 'login', component: LoginPageComponent, canActivate: [AuthReverseGuard] },
   { path: 'signup', component: SignupPageComponent, canActivate: [AuthReverseGuard] },

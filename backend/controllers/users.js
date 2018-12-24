@@ -39,7 +39,6 @@ exports.addUser = (req, res, next) => {
     User.find({ email: email })
     .then(document => {
       if (document.length > 0) {
-        console.log('Already Exists!');
         res.status(401).json({
           message: 'A username with this email already exists!',
           code: 'MAIL_EXISTS'
@@ -48,7 +47,6 @@ exports.addUser = (req, res, next) => {
     });
 
   }
-  console.log('addUser');
 
   bcrypt.hash(req.body.password, 10)
   .then(hash => {

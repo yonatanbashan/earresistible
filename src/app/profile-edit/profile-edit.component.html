@@ -1,0 +1,124 @@
+<div class="d-flex container app-fullview-card justify-content-center align-items-center">
+    <div class="col-6 shadow app-card">
+
+      <div class="row justify-content-center">
+        <div class="col-12 py-3">
+          <div class="row justify-content-center">
+            <div class="app-text-1 app-text-medium">
+              Edit your profile
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <form [formGroup]="profileEditForm" (ngSubmit)="onSubmit()" class="px-3 py-3">
+
+        <div class="row py-2">
+          <label for="artistName" class="app-text-1 app-text-smaller">Artist Name</label>
+          <input
+            type="text"
+            name="artistName"
+            class="form-control"
+            placeholder="Your artist name"
+            id="artistName"
+            formControlName="artistName">
+        </div>
+
+        <div class="row py-2">
+          <label for="description" class="app-text-1 app-text-smaller">Description</label>
+          <input
+            type="text"
+            name="description"
+            class="form-control"
+            placeholder="Short description"
+            id="description"
+            formControlName="description">
+        </div>
+
+        <div class="row py-2">
+          <label for="bio" class="app-text-1 app-text-smaller">Bio</label>
+          <textarea
+            type="bio"
+            name="bio"
+            rows="4"
+            class="form-control"
+            placeholder="Your bio"
+            id="bio"
+            formControlName="bio"></textarea>
+        </div>
+
+        <div class="row py-2">
+          <label for="countrySelect" class="app-text-1 app-text-smaller">Country:</label>
+          <select
+            class="form-control"
+            id="countrySelect"
+            formControlName="countrySelect">
+            <option *ngFor="let country of countries" [value]="country" >{{ country }}</option>
+          </select>
+        </div>
+
+        <div class="row py-2">
+          <label for="city" class="app-text-1 app-text-smaller">City:</label>
+          <input
+            type="text"
+            name="city"
+            class="form-control"
+            placeholder="City"
+            id="city"
+            formControlName="city">
+        </div>
+
+        <div class="row py-2">
+          <label for="genreSelect" class="app-text-1 app-text-smaller">Genre:</label>
+          <select
+            class="form-control"
+            id="genreSelect"
+            formControlName="genreSelect"
+            (change)="onSelectGenre($event)">
+            <option *ngFor="let genre of genres" [value]="genre" >{{ genre }}</option>
+            <option value="Other" >Other (specify)</option>
+          </select>
+        </div>
+
+        <div class="row py-2" *ngIf="!isOtherGenre">
+          <label for="genreSelect" class="app-text-1 app-text-smaller">Sub-genre:</label>
+          <select class="form-control" id="subGenreSelect" formControlName="subGenreSelect"  >
+            <option *ngFor="let subGenre of currentSubGenres" [value]="subGenre" >{{ subGenre }}</option>
+          </select>
+        </div>
+
+        <div class="row py-2" *ngIf="isOtherGenre">
+            <input
+              type="text"
+              name="otherGenre"
+              class="form-control"
+              placeholder="Other genre..."
+              id="otherGenre"
+              formControlName="otherGenre">
+        </div>
+
+
+        <div class="row py-2" *ngIf="isOtherGenre">
+            <label for="otherSubGenre" class="app-text-1 app-text-smaller">Other sub-genre:</label>
+            <input
+              type="text"
+              name="otherSubGenre"
+              class="form-control"
+              placeholder="Other sub-genre..."
+              id="otherSubGenre"
+              formControlName="otherSubGenre">
+        </div>
+
+        <div class="d-flex row mx-0 py-2 justify-content-between">
+          <button
+            type="submit"
+            class="btn btn-primary my-1 app-text-1 app-form-btn-text app-form-submit-btn"
+            [disabled]="!profileEditForm.valid">
+            Update
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </div>

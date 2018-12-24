@@ -1,6 +1,4 @@
 import { Release } from './release.model';
-import { GenreData } from './genre-data.model';
-import { LocationData } from './location-data.model';
 import { AuthData } from './auth-data.model';
 export interface Profile {
 
@@ -9,8 +7,10 @@ export interface Profile {
   imagePath: string;
   description: string;
   bio: string;
-  location: LocationData;
-  genre: GenreData;
+  locationCity: string;
+  locationCountry: string;
+  genre: string;
+  subGenre: string;
   releases: Release[];
 
 }

@@ -69,8 +69,9 @@
 
         <div class="d-flex flex-column">
           <button
+            [disabled]="!formValid() || !signupForm.valid"
             type="submit"
-            class="btn btn-primary my-1 app-text-1 app-text-small">
+            class="btn btn-primary my-1 app-form-btn-text app-form-submit-btn">
             Submit
           </button>
         </div>

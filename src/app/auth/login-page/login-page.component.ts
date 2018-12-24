@@ -1,16 +1,17 @@
 import { AppAuthService } from './../app-auth.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { AuthService } from 'angularx-social-login';
 import { FacebookLoginProvider } from "angularx-social-login";
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-login-page',
   templateUrl: './login-page.component.html',
   styleUrls: ['./login-page.component.css']
 })
-export class LoginPageComponent implements OnInit {
+export class LoginPageComponent implements OnInit, OnDestroy {
 
   loginForm: FormGroup
 
@@ -19,6 +20,8 @@ export class LoginPageComponent implements OnInit {
     private appAuthService: AppAuthService,
     private router: Router
   ) { }
+
+  fbSubs: Subscription = new Subscription();
 
   ngOnInit() {
     this.loginForm = new FormGroup({
@@ -35,6 +38,10 @@ export class LoginPageComponent implements OnInit {
 
   }
 
+  ngOnDestroy() {
+    this.fbSubs.unsubscribe();
+  }
+
   onSignup() {
     this.router.navigate(['/signup']);
   }
@@ -44,7 +51,7 @@ export class LoginPageComponent implements OnInit {
   }
 
   signInWithFB(): void {
-    this.authService.authState.subscribe((user) => {
+    this.fbSubs = this.authService.authState.subscribe((user) => {
       this.appAuthService.login(user.email, user.authToken, true);
     });
     this.authService.signIn(FacebookLoginProvider.PROVIDER_ID);

@@ -1,9 +1,10 @@
 const jwt = require('jsonwebtoken');
+const appConfig = require('../common/app-config');
 
 module.exports = (req, res, next) => {
   try {
     const token = req.headers.authorization.split(' ')[1];
-    const decodedToken = jwt.verify(token, 'blogsapptokenlongstringrandomcomesnow0$!q1f4nwj4gd!#gd67&#jv6nc64e0&89klx#p!n041pdhu&4s%a3f4h#4c');
+    const decodedToken = jwt.verify(token, appConfig.cryptString);
     req.userData = { username: decodedToken.username, userId: decodedToken.id }
     next();
   } catch(error) {

@@ -1,3 +1,4 @@
+import { ProfileService } from './../profile.service';
 import { ConnectionService } from './../connection.service';
 import { Injectable } from "@angular/core";
 import { HttpClient } from '@angular/common/http';
@@ -19,6 +20,7 @@ export class AppAuthService {
 
   constructor(
     private connService: ConnectionService,
+    private profService: ProfileService,
     private http: HttpClient,
     private router: Router
   ) {}
@@ -59,6 +61,10 @@ export class AppAuthService {
     this.http.post(this.serverAddress + 'api/users/add/', request)
     .subscribe((response: any) => {
       this.performLogin(response.token, response.expireLength);
+      this.profService.addEmptyProfile(this.authData).subscribe((response: any) => {
+        // What to do when profile is created
+        this.router.navigate(['/profile-edit']);
+      });
     }, (error) => {
       if (error.error.code === 'MAIL_EXISTS') {
         this.login(username, password, fb);
@@ -109,6 +115,7 @@ export class AppAuthService {
     this.authData = {
       username: decodedToken.username,
       email: decodedToken.email,
+      id: decodedToken.id
     }
     this.authStatusListener.next(true);
     this.authDataListener.next(this.authData)
