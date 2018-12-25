@@ -1,0 +1,19 @@
+<div class="fixed-bottom">
+  <ul class="app-text-1">
+      <li class="app-text-1 app-text-medium">
+        <button class="btn btn-primary app-form-btn-text" (click)="toggleAudio()">
+          Play!
+        </button>
+      </li>
+      <li>
+        <div class="app-text-1 app-text-medium">
+          {{ currentTime }} / {{ fullTime }}
+        </div>
+      </li>
+  </ul>
+  <br>
+  <div (click)="playbackSkip($event)" style="height: 15px; background: #666666; cursor: pointer;" [ngStyle]="{ width: playerWidthString }">
+    <div style="height: 15px; background: #8888CC;" [ngStyle]="{ width: progress }">
+    </div>
+  </div>
+</div>

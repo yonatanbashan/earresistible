@@ -25,7 +25,10 @@ import { SpinnerComponent } from './spinner/spinner.component';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatCardModule, MatProgressSpinnerModule, MatNativeDateModule, MatIconModule, MatCheckboxModule } from '@angular/material';
 import { MatDialogModule } from '@angular/material/dialog';
+import { AudioPlayerComponent } from './audio-player/audio-player.component';
+import { PlayerService } from './player.service';
 
+import { AudioContextModule } from 'angular-audio-context';
 
 let socialConfig = new AuthServiceConfig([
   {
@@ -51,8 +54,10 @@ export function provideConfig() {
     ProfileEditComponent,
     ProfileItemComponent,
     SpinnerComponent,
+    AudioPlayerComponent,
   ],
   imports: [
+    AudioContextModule.forRoot('balanced'),
     BrowserModule,
     AppRoutingModule,
     FormsModule,
@@ -71,6 +76,7 @@ export function provideConfig() {
     },
     ProfileService,
     AppAuthService,
+    PlayerService,
     ConnectionService
   ],
   bootstrap: [AppComponent]
