@@ -3,6 +3,7 @@ import { ProfileService } from './../profile.service';
 import { Profile } from './../models/profile.model';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { ReleaseService } from '../release.service';
 
 @Component({
   selector: 'app-profile-page',
@@ -12,7 +13,8 @@ import { Router } from '@angular/router';
 export class ProfilePageComponent implements OnInit {
 
   constructor(
-    private profileService: ProfileService,
+    private profService: ProfileService,
+    private relService: ReleaseService,
     private appAuthService: AppAuthService,
     private router: Router
   ) { }
@@ -21,20 +23,28 @@ export class ProfilePageComponent implements OnInit {
   isLoadingReleases = false;
 
   ngOnInit() {
+    this.updateProfile();
+  }
 
+  updateProfile() {
     this.isLoadingProfile = true;
     this.isLoadingReleases = true;
-    this.profileService.getProfile(this.appAuthService.getAuthData().id).subscribe((response: any) => {
+    this.profService.getProfile(this.appAuthService.getAuthData().id).subscribe((response: any) => {
       this.profile = response.profile;
-      this.profile.releases = this.profileService.getReleases();
+      this.relService.getReleases(this.appAuthService.getAuthData().id).subscribe(releases => {
+        this.profile.releases = releases;
+      });
       this.isLoadingProfile = false;
       this.isLoadingReleases = false;
     });
-
   }
 
   onEditProfile() {
     this.router.navigate(['/profile-edit']);
+  }
+
+  onNewRelease() {
+    this.router.navigate(['/release-edit']);
   }
 
 

@@ -7,5 +7,7 @@ export interface Release {
   imagePath: string;
   releaseDate: Date;
   items: Song[];
+  userId: string;
+  id: string;
 
 }

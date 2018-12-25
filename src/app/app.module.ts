@@ -13,7 +13,7 @@ import { ProfileService } from './profile.service';
 import { LoginPageComponent } from './auth/login-page/login-page.component';
 
 import { SocialLoginModule, AuthServiceConfig } from "angularx-social-login";
-import { GoogleLoginProvider, FacebookLoginProvider, LinkedInLoginProvider} from "angularx-social-login";
+import { FacebookLoginProvider } from "angularx-social-login";
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { SignupPageComponent } from './auth/signup-page/signup-page.component';
@@ -23,12 +23,12 @@ import { ProfileItemComponent } from './profile-page/profile-item/profile-item.c
 import { SpinnerComponent } from './spinner/spinner.component';
 
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatCardModule, MatProgressSpinnerModule, MatNativeDateModule, MatIconModule, MatCheckboxModule } from '@angular/material';
-import { MatDialogModule } from '@angular/material/dialog';
+import { MatNativeDateModule } from '@angular/material';
 import { AudioPlayerComponent } from './audio-player/audio-player.component';
 import { PlayerService } from './player.service';
 
-import { AudioContextModule } from 'angular-audio-context';
+import { ReleaseEditComponent } from './release-edit/release-edit.component';
+import { ReleaseService } from './release.service';
 
 let socialConfig = new AuthServiceConfig([
   {
@@ -55,9 +55,9 @@ export function provideConfig() {
     ProfileItemComponent,
     SpinnerComponent,
     AudioPlayerComponent,
+    ReleaseEditComponent,
   ],
   imports: [
-    AudioContextModule.forRoot('balanced'),
     BrowserModule,
     AppRoutingModule,
     FormsModule,
@@ -75,6 +75,7 @@ export function provideConfig() {
       useFactory: provideConfig
     },
     ProfileService,
+    ReleaseService,
     AppAuthService,
     PlayerService,
     ConnectionService

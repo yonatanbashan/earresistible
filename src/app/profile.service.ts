@@ -13,27 +13,6 @@ export class ProfileService {
 
   serverAddress = this.connService.getServerAddress();
 
-  // updateUserInfo(info: any, image: File = null) {
-
-  //   let imageData = new FormData();
-  //   if(image !== null && image !== undefined) {
-  //     imageData.append("image", image);
-  //   }
-
-  //   imageData.append("headerText", info.headerText);
-  //   imageData.append("hideDate", info.hideDate);
-  //   imageData.append("birthDate", info.birthDate);
-
-  //   if(info.profileImagePath !== undefined) {
-  //     imageData.append("profileImagePath", info.profileImagePath);
-  //   }
-
-  //   return this.http.put(this.serverAddress + 'api/users/info/', imageData)
-  //   .subscribe(responseData => {
-  //     this.router.navigate(['/user', this.authService.getActiveUser()]);
-  //   });
-  // }
-
   deleteUserImage() {
     const queryParams = '?field=photo';
     return this.http.delete(this.serverAddress + 'api/profiles/' + queryParams)
@@ -99,6 +78,7 @@ export class ProfileService {
   getReleases() {
     let releases = [
       {
+        userId: 'blabla',
         name: 'The Right Side',
         type: 'EP',
         imagePath: 'https://i.imgur.com/4JVWpL5.jpg',
@@ -132,6 +112,7 @@ export class ProfileService {
         ]
       },
       {
+        userId: 'blabla',
         name: 'The Astronaut',
         type: 'EP',
         imagePath: 'https://i.imgur.com/WOa26Rg.jpg',

@@ -11,7 +11,7 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
 
   // General variables
   song: Song;
-  currentTime: string;
+  currentTime: string = '0';
   fullTime: string;
   isPlaying: boolean;
   // Subscription variables
@@ -23,16 +23,25 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
   playerWidth = 500;
   playerWidthString = this.playerWidth.toString() + 'px';
 
+  currentTimeFormatted: string;
+  fullTimeFormatted: string;
+
   constructor(private _playerService: PlayerService) {
   }
 
   ngOnInit() {
+    this.currentTimeFormatted = this.formatTime(parseFloat(this.currentTime));
     this.currentTimeSubscription = this._playerService.currentTime.subscribe(data => {
-      this.currentTime = data
+      this.currentTime = data;
+      this.currentTimeFormatted = this.formatTime(parseFloat(this.currentTime));
       this.progress = (parseFloat(this.currentTime) / parseFloat(this.fullTime) * 100).toString() + '%';
     });
-    this.fullTimeSubscription = this._playerService.fullTime.subscribe(data => this.fullTime = data);
-    this._playerService.setPlayer('SongName', this.filePath);
+    this.fullTimeSubscription = this._playerService.fullTime.subscribe(
+      data => {
+        this.fullTime = data
+        this.fullTimeFormatted = this.formatTime(parseFloat(this.fullTime));
+      });
+    this._playerService.setPlayer(this.filePath);
   }
 
   toggleAudio() {
@@ -52,6 +61,15 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
     this.stopAudio();
     this.currentTimeSubscription.unsubscribe();
     this.fullTimeSubscription.unsubscribe();
+  }
+
+  formatTime(time: number) {
+    const minutes = Math.floor(time / 60);
+    const seconds = Math.round(time % 60);
+    const minutesStr = minutes.toString();
+    let secondsStr = seconds.toString();
+    secondsStr = seconds < 10 ? '0' + secondsStr : secondsStr;
+    return `${minutesStr}:${secondsStr}`;
   }
 
 }

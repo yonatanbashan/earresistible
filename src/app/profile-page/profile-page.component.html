@@ -13,7 +13,7 @@
         </div>
         <div class="col-8">
           <div class="row">
-            <div class="col-10">
+            <div class="col-9">
             <div class="app-text-1 app-text-large">
               {{ profile.artistName }}
             </div>
@@ -33,10 +33,17 @@
                 {{ profile.locationCity }}
             </div>
             </div>
-            <div class="col-2">
+            <div class="col-3">
+              <div class="row justify-content-end">
               <button
                 class="btn btn-primary mx-3 my-2 app-text-1 app-form-btn-text"
                 (click)="onEditProfile()">Edit</button>
+              </div>
+              <div class="row justify-content-end">
+              <button
+                class="btn btn-primary mx-3 my-2 app-text-1 app-form-btn-text"
+                (click)="onNewRelease()">Add release</button>
+              </div>
             </div>
           </div>
         </div>
@@ -45,7 +52,10 @@
   </div>
   <span *ngIf="!isLoadingReleases">
     <div class="row my-3" *ngFor="let release of profile.releases">
-      <app-profile-item [release]="release" class="col-10 my-3 offset-1 shadow-lg app-card"></app-profile-item>
+      <app-profile-item
+        [release]="release"
+        (itemUpdated)="updateProfile()"
+        class="col-10 my-3 offset-1 shadow-lg app-card"></app-profile-item>
     </div>
   </span>
 </div>

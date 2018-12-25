@@ -1,4 +1,5 @@
 const Profile = require('../models/profile');
+const Release = require('../models/release');
 const appConfig = require('../common/app-config');
 
 exports.getProfile = (req, res, next) => {
@@ -51,6 +52,7 @@ exports.updateProfile = (req, res, next) => {
   })
 
 }
+
 
 exports.deleteField = (req, res, next) => {
 

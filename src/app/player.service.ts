@@ -1,4 +1,3 @@
-import { Song } from './models/song.model';
 import { Injectable } from "@angular/core";
 import { Subject } from "rxjs";
 
@@ -12,7 +11,7 @@ export class PlayerService {
 
   constructor() {}
 
-  setPlayer(song: string, audioFile: string) {
+  setPlayer(audioFile: string) {
     this.audio = new Audio(audioFile);
     this.audio.oncanplaythrough = () => {
       this.fullTime.next(this.audio.duration);

@@ -11,9 +11,14 @@
       {{ release.name }}
     </div>
     <div class="app-text-1 app-text-small">
-      {{ release.type }}, {{ release.releaseDate.getFullYear() }}
+      {{ release.type }}
     </div>
-  </div>
+    <div class="app-text-1 app-text-small">
+      {{ release.releaseDate }}
+    </div>
+    <button
+    class="btn btn-primary mx-3 my-2 app-text-1 app-form-btn-text"
+    (click)="removeRelease(release)">Delete</button></div>
 </div>
 <div class="container-fluid py-3">
   <div class="row" *ngFor="let item of release.items">
