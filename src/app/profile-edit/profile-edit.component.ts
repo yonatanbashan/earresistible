@@ -42,7 +42,7 @@ export class ProfileEditComponent implements OnInit {
     this.route.params.subscribe(params => {
       if (!params['empty']) {
         this.isLoading = true;
-        this.profService.getProfile(this.appAuthService.getAuthData().id)
+        this.profService.getProfile(this.appAuthService.getAuthData().username)
         .subscribe((response: any) => {
           const profile = response.profile;
           this.populateForm(profile);
@@ -129,12 +129,26 @@ export class ProfileEditComponent implements OnInit {
       subGenre = this.profileEditForm.value.subGenreSelect;
     }
 
+    let description = this.profileEditForm.value.description;
+    let bio = this.profileEditForm.value.bio;
+    let locationCountry = this.profileEditForm.value.countrySelect;
+    let locationCity = this.profileEditForm.value.city;
+
+    console.log(this.profileEditForm.value.description);
+
+    genre = (genre === null) ? '' : genre;
+    subGenre = (subGenre === null) ? '' : subGenre;
+    bio = (bio === null) ? '' : bio;
+    description = (description === null) ? '' : description;
+    locationCountry = (locationCountry === null) ? '' : locationCountry;
+    locationCity = (locationCity === null) ? '' : locationCity;
+
     const profile = {
       artistName: this.profileEditForm.value.artistName,
-      description: this.profileEditForm.value.description,
-      bio: this.profileEditForm.value.bio,
-      locationCountry: this.profileEditForm.value.countrySelect,
-      locationCity: this.profileEditForm.value.city,
+      description: description,
+      bio: bio,
+      locationCountry: locationCountry,
+      locationCity: locationCity,
       genre: genre,
       subGenre: subGenre,
     }
@@ -143,7 +157,7 @@ export class ProfileEditComponent implements OnInit {
     this.profService.updateProfile(profile, this.profileEditForm.value.userImage)
     .subscribe((response) => {
       this.isUpdating = false;
-      this.router.navigate(['/profile']);
+      this.router.navigate(['/profile', this.appAuthService.getAuthData().username]);
     }, (error) => {
       console.log(error.error.message); // TODO: Better error handling
     });

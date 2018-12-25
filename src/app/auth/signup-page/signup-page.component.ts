@@ -25,7 +25,7 @@ export class SignupPageComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.signupForm = new FormGroup({
-      'username': new FormControl(null, Validators.required),
+      'username': new FormControl(null, [Validators.required, Validators.minLength(6)]),
       'password': new FormControl(null, [Validators.required, Validators.minLength(6)]),
       'repeatPassword': new FormControl(null, Validators.required),
     });

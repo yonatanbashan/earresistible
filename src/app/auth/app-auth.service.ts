@@ -2,7 +2,7 @@ import { ProfileService } from './../profile.service';
 import { ConnectionService } from './../connection.service';
 import { Injectable } from "@angular/core";
 import { HttpClient } from '@angular/common/http';
-import { Subject } from 'rxjs';
+import { Subject, Observable } from 'rxjs';
 import { AuthData } from '../models/auth-data.model';
 import * as jwt_decode from 'jwt-decode';
 import { Router } from '@angular/router';
@@ -88,7 +88,7 @@ export class AppAuthService {
       queryArgs += `&fbToken=${password}`;
     }
 
-    this.http.get(this.serverAddress + 'api/users/' + queryArgs)
+    this.http.get(this.serverAddress + 'api/users/login/' + queryArgs)
     .subscribe((response: any) => {
       if (!response.token) {
         this.authData = null;

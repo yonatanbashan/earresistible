@@ -1,8 +1,9 @@
+import { Subscription } from 'rxjs';
 import { AppAuthService } from './../auth/app-auth.service';
 import { ProfileService } from './../profile.service';
 import { Profile } from './../models/profile.model';
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
 import { ReleaseService } from '../release.service';
 
 @Component({
@@ -10,32 +11,63 @@ import { ReleaseService } from '../release.service';
   templateUrl: './profile-page.component.html',
   styleUrls: ['./profile-page.component.css']
 })
-export class ProfilePageComponent implements OnInit {
+export class ProfilePageComponent implements OnInit, OnDestroy {
 
   constructor(
     private profService: ProfileService,
     private relService: ReleaseService,
     private appAuthService: AppAuthService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) { }
   profile: Profile;
   isLoadingProfile = false;
   isLoadingReleases = false;
+  isMe = false;
+  userId: string;
+  username: string;
+  authStatusSubs: Subscription;
+  isAuth = false;
 
   ngOnInit() {
-    this.updateProfile();
+
+    this.authStatusSubs = this.appAuthService.getAuthStatusListener().subscribe(status => {
+      this.isAuth = status;
+    });
+
+    this.isLoadingProfile = true;
+    this.isLoadingReleases = true;
+    this.route.params.subscribe((params) => {
+      this.username = params['username'];
+      this.profService.getUserByUsername(this.username)
+      .subscribe((response: any) => {
+        this.userId = response.user._id;
+        this.updateProfile();
+        if(this.isAuth) {
+          if (this.appAuthService.getAuthData().id === this.userId) {
+            this.isMe = true;
+          } else {
+            this.isMe = false;
+          }
+        } else {
+          this.isMe = false;
+        }
+      });
+    });
+  }
+
+  ngOnDestroy() {
+    this.authStatusSubs.unsubscribe();
   }
 
   updateProfile() {
-    this.isLoadingProfile = true;
-    this.isLoadingReleases = true;
-    this.profService.getProfile(this.appAuthService.getAuthData().id).subscribe((response: any) => {
+    this.profService.getProfile(this.username).subscribe((response: any) => {
       this.profile = response.profile;
-      this.relService.getReleases(this.appAuthService.getAuthData().id).subscribe(releases => {
-        this.profile.releases = releases;
-      });
       this.isLoadingProfile = false;
-      this.isLoadingReleases = false;
+      this.relService.getReleases(this.userId).subscribe(releases => {
+        this.profile.releases = releases;
+        this.isLoadingReleases = false;
+      });
     });
   }
 

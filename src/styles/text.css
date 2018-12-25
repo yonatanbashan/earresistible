@@ -12,6 +12,10 @@
   color: white;
 }
 
+.app-text-form-warning {
+  color: #DD4466;
+}
+
 /* Sizes */
 .app-text-large {
   font-size: 2rem;

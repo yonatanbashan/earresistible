@@ -17,6 +17,7 @@
       {{ release.releaseDate }}
     </div>
     <button
+    *ngIf="isMe"
     class="btn btn-primary mx-3 my-2 app-text-1 app-form-btn-text"
     (click)="removeRelease(release)">Delete</button></div>
 </div>

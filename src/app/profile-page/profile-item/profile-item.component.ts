@@ -1,24 +1,49 @@
 import { AppAuthService } from './../../auth/app-auth.service';
 import { ReleaseService } from './../../release.service';
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, OnChanges, OnDestroy } from '@angular/core';
 import { Release } from 'src/app/models/release.model';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-profile-item',
   templateUrl: './profile-item.component.html',
   styleUrls: ['./profile-item.component.css']
 })
-export class ProfileItemComponent implements OnInit {
+export class ProfileItemComponent implements OnInit, OnChanges, OnDestroy {
 
   constructor(
     private appAuthService: AppAuthService,
     private relService: ReleaseService
   ) { }
 
+  authStatusSubs: Subscription;
+  isAuth: boolean = false;
+
   @Input() release: Release;
-  @Output() itemUpdated = new EventEmitter<string>();
+  @Output('itemUpdated') itemUpdated: EventEmitter<string> = new EventEmitter<string>();
+  isMe = false;
 
   ngOnInit() {
+    this.updateMeStatus();
+    this.authStatusSubs = this.appAuthService.getAuthStatusListener().subscribe(status => {
+      this.isAuth = status;
+    });
+  }
+
+  ngOnDestroy() {
+    this.authStatusSubs.unsubscribe();
+  }
+
+  ngOnChanges() {
+    this.updateMeStatus();
+  }
+
+  updateMeStatus() {
+    if (this.isAuth) {
+      this.isMe = (this.release.userId === this.appAuthService.getAuthData().id) ? true : false;
+    } else {
+      this.isMe = false;
+    }
   }
 
   getLengthStr(length: number) {

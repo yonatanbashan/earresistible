@@ -67,13 +67,25 @@ export class ProfileService {
 
   }
 
+  getUserByUsername(username: string) {
 
-  getProfile(id: string) {
+    return this.http.get(this.serverAddress + 'api/users/user/' + username);
 
-    let queryParams = `?id=${id}`
+  }
+
+
+  getProfile(param: string, isUsername = true) {
+
+    let queryParams;
+    if(isUsername) {
+      queryParams = `?username=${param}`
+    } else {
+      queryParams = `?id=${param}`
+    }
     return this.http.get(this.serverAddress + 'api/profiles/' + queryParams);
 
   }
+
 
   getReleases() {
     let releases = [

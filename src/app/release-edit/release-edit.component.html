@@ -1,6 +1,14 @@
 <div class="d-flex container py-5 justify-content-center align-items-center">
   <div class="col-9 shadow app-card">
-    <form [formGroup]="releaseEditForm" (ngSubmit)="onSubmit()" class="px-3 py-3">
+    <div *ngIf="isUpdating" class="col-12">
+      <app-spinner></app-spinner>
+      <div class="row">
+        <div class="col-12 text-center">
+          <div class="app-text-1 app-text-medium" *ngIf="isUpdating"><br><br><br>Adding new release...<br><br><br></div>
+        </div>
+      </div>
+    </div>
+    <form [formGroup]="releaseEditForm" (ngSubmit)="onSubmit()" class="px-3 py-3" *ngIf="!isUpdating">
       <div class="row py-2">
         <label for="name" class="app-text-1 app-text-smaller">Release name:</label>
         <input

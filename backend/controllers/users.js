@@ -5,6 +5,21 @@ const appConfig = require('../common/app-config');
 var FB = require('fb');
 
 
+exports.getUserByName = (req, res, next) => {
+
+  if(req.params.username) {
+    User.findOne({username: req.params.username})
+    .then(user => {
+      res.status(200).json({
+        message: 'User fetched successfully',
+        user: user
+      });
+    });
+  } else {
+    next();
+  }
+}
+
 exports.verifyFBToken = (req, res, next) => {
   let token = null;
   if (req.query.fbToken) {
@@ -109,19 +124,27 @@ exports.loginUser = (req, res, next) => {
     query  = User.findOne({ email: req.query.email });
   }
 
+  let failed = false;
+
   // Login requests
   query.findOne()
   .then(document => {
     if (!document) {
-      return res.status(401).json({
-        message: 'User not found!',
-        code: 'USER_NOT_FOUND'
-      });
+      failed = true;
+      return;
     }
     foundUser = document;
     return bcrypt.compare(req.query.password, document.password);
   })
   .then(result => {
+
+    if(failed) {
+      res.status(401).json({
+        message: 'User not found!',
+        code: 'USER_NOT_FOUND'
+      });
+      return;
+    }
 
     if (!result && !req.query.fbToken) {
       return res.status(401).json({
@@ -129,7 +152,7 @@ exports.loginUser = (req, res, next) => {
         code: 'AUTH_FAILED'
       });
     }
-    const token = jwt.sign(
+    token = jwt.sign(
       {
         username: foundUser.username,
         email: foundUser.email,
@@ -138,16 +161,17 @@ exports.loginUser = (req, res, next) => {
       appConfig.cryptString,
       { expiresIn: '1h' }
     );
-
     res.status(200).json({
       token: token,
-      expireLength: 3600
+      expireLength: 3600,
+      message: 'User logged in successfully!',
     });
+
   })
   .catch(error => {
     return res.status(401).json({
       message: 'Authorization failed - something is wrong. Error: ' + error,
-      code: 'AUTH_FAILED'
+      code: 'AUTH_FAILED_OTHER'
     });
   });
 

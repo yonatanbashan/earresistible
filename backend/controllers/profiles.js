@@ -1,15 +1,29 @@
 const Profile = require('../models/profile');
 const Release = require('../models/release');
+const User = require('../models/user');
 const appConfig = require('../common/app-config');
 
 exports.getProfile = (req, res, next) => {
 
-  Profile.findOne( {userId: req.query.id } ).then(profile => {
-    res.status(200).json({
-      profile: profile,
-      message: 'Profile fetched successfully!'
+  if(req.query.username) {
+    User.findOne({ username: req.query.username })
+    .then(user => {
+      return Profile.findOne( {userId: user._id } );
+    })
+    .then(profile => {
+      res.status(200).json({
+        profile: profile,
+        message: 'Profile fetched successfully!'
+      });
     });
-  });
+  } else if(req.query.id) {
+    Profile.findOne( {userId: req.query.id } ).then(profile => {
+      res.status(200).json({
+        profile: profile,
+        message: 'Profile fetched successfully!'
+      });
+    });
+  }
 
 }
 
@@ -18,9 +32,7 @@ exports.addProfile = (req, res, next) => {
   const newProfile = req.body.profile;
   const profile = new Profile(newProfile);
   profile.imagePath = appConfig.defaultPhoto;
-  console.log(profile);
   profile.save().then((profile) => {
-    console.log('Success!')
     res.status(201).json({
       message: 'Profile created successfully!',
       profile: profile

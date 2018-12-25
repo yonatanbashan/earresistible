@@ -15,6 +15,7 @@ export class LoginPageComponent implements OnInit, OnDestroy {
 
   loginForm: FormGroup
   isLoading: boolean = false;
+  authFailed: boolean = false;
 
   constructor(
     private authService: AuthService,
@@ -23,6 +24,7 @@ export class LoginPageComponent implements OnInit, OnDestroy {
   ) { }
 
   fbSubs: Subscription = new Subscription();
+  authStateSubs: Subscription;
 
   ngOnInit() {
     this.loginForm = new FormGroup({
@@ -31,10 +33,14 @@ export class LoginPageComponent implements OnInit, OnDestroy {
     });
 
 
-    this.appAuthService.getAuthDataListener().subscribe(status => {
+    this.authStateSubs = this.appAuthService.getAuthStatusListener().subscribe(status => {
+      this.isLoading = false;
+      console.log('Done!');
       if (status) {
-        this.isLoading = false;
+        this.authFailed = false;
         this.router.navigate(['/dashboard']);
+      } else {
+        this.authFailed = true;
       }
     });
 
@@ -42,6 +48,7 @@ export class LoginPageComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.fbSubs.unsubscribe();
+    this.authStateSubs.unsubscribe();
   }
 
   onSignup() {

@@ -50,6 +50,8 @@
         </div>
       </div>
 
+      <span *ngIf="authFailed" class="app-text-form-warning app-text-tiny">Password/username incorrect.</span>
+
       <div class="d-flex row mx-0 py-2 justify-content-between" *ngIf="!isLoading">
         <button
           type="submit"

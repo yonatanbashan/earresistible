@@ -18,8 +18,11 @@ router.post('/add', UserController.verifyFBToken, UserController.addUser);
 
 // GET requests
 
-// Login and check existence
-router.get('', UserController.verifyFBToken, UserController.loginUser);
+// Get user by username
+router.get('/user/:username', UserController.getUserByName);
+
+// Login
+router.get('/login', UserController.verifyFBToken, UserController.loginUser);
 
 
 

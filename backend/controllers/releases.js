@@ -33,16 +33,10 @@ exports.addRelease = (req, res, next) => {
     }
   })
   .then(() => {
-    console.log('Added release: ID = ' + release._id)
     res.status(200).json({
       message: 'User release added successfully!',
-      release: release
+      release: newReleaseItem
     })
-  })
-  .catch((error) => {
-    res.status(401).json({
-      message: 'An error occurred during release update attempt!'
-    });
   });
 
 }

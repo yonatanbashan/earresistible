@@ -2,6 +2,7 @@ import { AppAuthService } from './../auth/app-auth.service';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ReleaseService } from '../release.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-release-edit',
@@ -11,7 +12,9 @@ import { ReleaseService } from '../release.service';
 export class ReleaseEditComponent implements OnInit {
 
   constructor(
-    private relService: ReleaseService
+    private relService: ReleaseService,
+    private appAuthService: AppAuthService,
+    private router: Router
   ) { }
 
   releaseEditForm: FormGroup;
@@ -42,8 +45,7 @@ export class ReleaseEditComponent implements OnInit {
     this.isUpdating = true;
     this.relService.addRelease(release, this.releaseEditForm.value.releaseImage).subscribe((response: any) => {
         this.isUpdating = false;
-    }, (error) => {
-      console.log(error.error.message); // TODO: Better error handling
+        this.router.navigate(['/profile', this.appAuthService.getAuthData().username]);
     });
   }
 

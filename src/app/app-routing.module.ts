@@ -15,7 +15,7 @@ import { AudioPlayerComponent } from './audio-player/audio-player.component';
 
 const appRoutes: Routes = [
   { path: 'player', component: AudioPlayerComponent },
-  { path: 'profile', component: ProfilePageComponent, canActivate: [AuthGuard] },
+  { path: 'profile/:username', component: ProfilePageComponent},
   { path: 'profile-edit', component: ProfileEditComponent, canActivate: [AuthGuard] },
   { path: 'release-edit', component: ReleaseEditComponent, canActivate: [AuthGuard] },
   { path: 'details', component: UpdateDetailsComponent, canActivate: [AuthGuard] },
