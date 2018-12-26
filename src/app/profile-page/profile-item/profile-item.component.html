@@ -19,7 +19,11 @@
     <button
     *ngIf="isMe"
     class="btn btn-primary mx-3 my-2 app-text-1 app-form-btn-text"
-    (click)="removeRelease(release)">Delete</button></div>
+    (click)="removeRelease(release)">Delete</button>
+    <button
+    *ngIf="isMe && !release.published"
+    class="btn btn-primary mx-3 my-2 app-text-1 app-form-btn-text"
+    (click)="publishRelease(release)">Publish</button></div>
 </div>
 <div class="container-fluid py-3">
   <div class="row" *ngFor="let item of release.items">

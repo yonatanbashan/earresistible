@@ -2,6 +2,7 @@ import { Song } from "./song.model";
 
 export interface Release {
 
+  published: boolean;
   name: string;
   type: string;
   imagePath: string;

@@ -27,6 +27,7 @@ export class ReleaseService {
         releaseDate: dateFormat(new Date(release.releaseDate), {dateOnly: true}),
         items: release.items,
         userId: release.userId,
+        published: release.published,
         id: release._id
       };
     });
@@ -55,6 +56,14 @@ export class ReleaseService {
 
     return this.http.post(this.serverAddress + 'api/releases/add/', releaseData);
 
+  }
+
+
+  publishRelease(release: Release) {
+    const request = {
+      id: release.id
+    }
+    return this.http.put(this.serverAddress + 'api/releases/publish/', request);
   }
 
   deleteRelease(release: Release) {

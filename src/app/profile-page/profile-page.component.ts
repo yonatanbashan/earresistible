@@ -31,6 +31,8 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
 
+    this.isAuth = (this.appAuthService.getToken() !== null);
+
     this.authStatusSubs = this.appAuthService.getAuthStatusListener().subscribe(status => {
       this.isAuth = status;
     });

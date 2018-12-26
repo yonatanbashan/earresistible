@@ -24,6 +24,8 @@ export class ProfileItemComponent implements OnInit, OnChanges, OnDestroy {
   isMe = false;
 
   ngOnInit() {
+    this.isAuth = (this.appAuthService.getToken() !== null);
+
     this.updateMeStatus();
     this.authStatusSubs = this.appAuthService.getAuthStatusListener().subscribe(status => {
       this.isAuth = status;
@@ -64,6 +66,13 @@ export class ProfileItemComponent implements OnInit, OnChanges, OnDestroy {
         this.itemUpdated.emit('update');
       });
     }
+  }
+
+  publishRelease(release: Release) {
+    this.relService.publishRelease(release).subscribe(response => {
+      this.itemUpdated.emit('update');
+    });
+    this.release.published = true;
   }
 
 }

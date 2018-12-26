@@ -53,6 +53,7 @@
   <span *ngIf="!isLoadingReleases">
     <div class="row my-3" *ngFor="let release of profile.releases">
       <app-profile-item
+        *ngIf="isMe || release.published"
         [release]="release"
         (itemUpdated)="updateProfile()"
         class="col-10 my-3 offset-1 shadow-lg app-card"></app-profile-item>

@@ -41,6 +41,16 @@ exports.addRelease = (req, res, next) => {
 
 }
 
+exports.publishRelease = (req, res, next) => {
+
+  Release.findByIdAndUpdate(req.body.id, { published: true })
+  .then(release => {
+    res.status(200).json({
+      message: 'Release published!'
+    });
+  })
+}
+
 exports.getUserReleases = (req, res, next) => {
 
   query  = Release.find({ userId: req.query.userId });

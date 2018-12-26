@@ -16,6 +16,12 @@ const photoUpload = require("../middleware/photo-upload");
 router.post('/add', checkAuth, photoUpload.single('image'), ReleaseController.addRelease);
 
 
+// PUT request
+
+// Publish release
+router.put('/publish', checkAuth, ReleaseController.publishRelease);
+
+
 // GET requests
 router.get('/user', ReleaseController.getUserReleases);
 
