@@ -6,6 +6,7 @@ import { map } from 'rxjs/operators';
 import { dateFormat } from './common/date-formatter';
 import { Subscription, Observable } from 'rxjs';
 import { Release } from './models/release.model';
+import { Song } from './models/song.model';
 
 @Injectable()
 export class ReleaseService {
@@ -33,7 +34,26 @@ export class ReleaseService {
     });
   }
 
+  mapSongs = (response) => {
+    return response.songs.map(song => {
+      return {
+        name: song.name,
+        filePath: song.filePath,
+        plays: song.plays,
+        id: song._id
+      };
+    });
+  }
 
+  // Get a single release by ID
+  getRelease(releaseId: string) {
+    const queryParams = `?id=${releaseId}`;
+    return this.http.get(this.serverAddress + 'api/releases/get/' + queryParams)
+    .pipe(map(this.mapReleases));
+  }
+
+
+  // Get all the user's releases
   getReleases(id: string) {
     const queryParams = `?userId=${id}`;
     return this.http.get(this.serverAddress + 'api/releases/user/' + queryParams)
@@ -56,6 +76,30 @@ export class ReleaseService {
 
     return this.http.post(this.serverAddress + 'api/releases/add/', releaseData);
 
+  }
+
+  addSong(release: Release, song: any, songFile: File = null) {
+    let songData = new FormData();
+
+    songData.append("song", songFile);
+    songData.append("name", song.name);
+    songData.append("releaseName", release.name)
+    songData.append("releaseId", release.id)
+
+
+    return this.http.post(this.serverAddress + 'api/songs/add/', songData);
+
+  }
+
+  getReleaseSongs(release: Release) {
+    const queryParams = `?releaseId=${release.id}&userId=${release.userId}`;
+    return this.http.get(this.serverAddress + 'api/songs/release/' + queryParams)
+    .pipe(map(this.mapSongs));
+  }
+
+  deleteSong(song: Song) {
+    const queryParams = `?songId=${song.id}`;
+    return this.http.delete(this.serverAddress + 'api/songs/' + queryParams);
   }
 
 

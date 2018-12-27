@@ -1,19 +1,16 @@
 <div class="col-12">
-  <ul class="app-text-1">
-      <li class="app-text-1 app-text-medium">
-        <button class="btn btn-primary app-form-btn-text" (click)="toggleAudio()">
-          Play!
-        </button>
-      </li>
-      <li>
-        <div class="app-text-1 app-text-medium">
-          {{ currentTimeFormatted }}/{{ fullTimeFormatted }}
-        </div>
-      </li>
-  </ul>
-  <br>
+  <div class="row">
+    <button class="btn btn-primary btn-sm app-form-btn-text app-text-smaller" (click)="toggleAudio()">
+      Play
+    </button>
+    <div class="app-text-1 app-text-smaller">
+        {{ currentTimeFormatted }}/{{ fullTimeFormatted }}
+    </div>
+  </div>
+  <div class="row">
   <div (click)="playbackSkip($event)" style="height: 15px; background: #666666; cursor: pointer;" [ngStyle]="{ width: playerWidthString }">
     <div style="height: 15px; background: #8888CC;" [ngStyle]="{ width: progress }">
     </div>
+  </div>
   </div>
 </div>

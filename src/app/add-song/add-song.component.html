@@ -1,0 +1,56 @@
+<div class="d-flex container py-5 justify-content-center align-items-center">
+  <div class="col-9 shadow app-card">
+    <span *ngIf="isLoading">
+    <app-spinner></app-spinner>
+      <div class="row">
+        <div class="col-12 text-center">
+          <div class="app-text-1 app-text-medium"><br><br><br>Loading release...<br><br><br></div>
+        </div>
+      </div>
+    </span>
+    <span *ngIf="isUploading">
+      <app-spinner></app-spinner>
+        <div class="row">
+          <div class="col-12 text-center">
+            <div class="app-text-1 app-text-medium"><br><br><br>Uploading song...<br><br><br></div>
+          </div>
+        </div>
+    </span>
+
+    <span *ngIf="!isLoading && !isUploading">
+        <div class="app-text-1 app-text-medium text-center py-2">{{ release.name }}</div>
+
+      <form [formGroup]="addSongForm" (ngSubmit)="onSubmit()" class="px-3 py-3" *ngIf="!isUpdating">
+
+        <div class="row py-2">
+          <label for="name" class="app-text-1 app-text-smaller">Song name:</label>
+          <input
+            type="text"
+            name="name"
+            class="form-control"
+            placeholder="Song name"
+            id="name"
+            formControlName="name">
+        </div>
+
+        <div class="row py-2">
+            <button mat-stroked-button type="button" class="btn btn-primary my-1 app-text-1 app-form-btn-text" (click)="filePicker.click()">Pick file...</button>
+            <input type="file" #filePicker (change)="onFilePicked($event)" hidden>
+        </div>
+        <div class="app-text-1 app-text-smaller" *ngIf="addSongForm.get('songFile').value"> {{ addSongForm.get('songFile').value.name }}</div>
+
+        <div class="row py-2">
+          <button
+            type="submit"
+            class="btn btn-primary my-1 app-text-1 app-form-btn-text app-form-submit-btn"
+            [disabled]="!addSongForm.valid || !addSongForm.get('songFile').value">
+            Upload
+          </button>
+        </div>
+      </form>
+
+
+    </span>
+  </div>
+</div>
+

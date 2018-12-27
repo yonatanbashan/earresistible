@@ -3,6 +3,8 @@ import { ReleaseService } from './../../release.service';
 import { Component, OnInit, Input, Output, EventEmitter, OnChanges, OnDestroy } from '@angular/core';
 import { Release } from 'src/app/models/release.model';
 import { Subscription } from 'rxjs';
+import { Router } from '@angular/router';
+import { Song } from 'src/app/models/song.model';
 
 @Component({
   selector: 'app-profile-item',
@@ -13,17 +15,27 @@ export class ProfileItemComponent implements OnInit, OnChanges, OnDestroy {
 
   constructor(
     private appAuthService: AppAuthService,
-    private relService: ReleaseService
+    private relService: ReleaseService,
+    private router: Router,
   ) { }
 
   authStatusSubs: Subscription;
   isAuth: boolean = false;
+  isLoadingSongs = true;
 
   @Input() release: Release;
   @Output('itemUpdated') itemUpdated: EventEmitter<string> = new EventEmitter<string>();
   isMe = false;
 
   ngOnInit() {
+
+    this.isLoadingSongs = true;
+    this.relService.getReleaseSongs(this.release)
+    .subscribe((songs: Song[]) => {
+      this.isLoadingSongs = false;
+      this.release.items = songs;
+    });
+
     this.isAuth = (this.appAuthService.getToken() !== null);
 
     this.updateMeStatus();
@@ -38,6 +50,14 @@ export class ProfileItemComponent implements OnInit, OnChanges, OnDestroy {
 
   ngOnChanges() {
     this.updateMeStatus();
+  }
+
+  deleteSong(song: Song) {
+    this.isLoadingSongs = true;
+    this.relService.deleteSong(song).subscribe(() => {
+      this.itemUpdated.emit('update');
+      this.isLoadingSongs = false;
+    });
   }
 
   updateMeStatus() {
@@ -73,6 +93,10 @@ export class ProfileItemComponent implements OnInit, OnChanges, OnDestroy {
       this.itemUpdated.emit('update');
     });
     this.release.published = true;
+  }
+
+  onAddSong(release: Release) {
+    this.router.navigate(['/add-song', release.id])
   }
 
 }

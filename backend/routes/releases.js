@@ -24,6 +24,7 @@ router.put('/publish', checkAuth, ReleaseController.publishRelease);
 
 // GET requests
 router.get('/user', ReleaseController.getUserReleases);
+router.get('/get', ReleaseController.getReleaseById);
 
 
 // DELETE requests

@@ -23,17 +23,28 @@
     <button
     *ngIf="isMe && !release.published"
     class="btn btn-primary mx-3 my-2 app-text-1 app-form-btn-text"
-    (click)="publishRelease(release)">Publish</button></div>
+    (click)="publishRelease(release)">Publish</button>
+    <button
+    *ngIf="isMe"
+    class="btn btn-primary mx-3 my-2 app-text-1 app-form-btn-text"
+    (click)="onAddSong(release)">Add Song</button></div>
 </div>
-<div class="container-fluid py-3">
+<div class="container-fluid py-3" *ngIf="!isLoadingSongs">
   <div class="row" *ngFor="let item of release.items">
     <div class="col-9 offset-3 py-2">
       <div class="row justify-content-between">
+        <div class="row">
         <div class="app-text-1 app-text-small">
           {{ item.name }}
         </div>
-        <div class="app-text-1 app-text-small">
-            {{ getLengthStr(item.length) }}
+        </div>
+        <div class="row">
+        <app-audio-player
+        [song]=item></app-audio-player>
+        <button
+        *ngIf="isMe"
+        class="btn btn-primary btn-sm mx-3 my-2 app-text-1 app-form-btn-text"
+        (click)="deleteSong(item)">Delete Song</button>
         </div>
       </div>
     </div>

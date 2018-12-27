@@ -51,6 +51,18 @@ exports.publishRelease = (req, res, next) => {
   })
 }
 
+exports.getReleaseById = (req, res, next) => {
+
+  Release.findById(req.query.id)
+  .then(release => {
+    res.status(200).json({
+      message: 'Release fetched successfully!',
+      releases: [release] // Returning as array for better handling on frontend
+    });
+  })
+
+}
+
 exports.getUserReleases = (req, res, next) => {
 
   query  = Release.find({ userId: req.query.userId });

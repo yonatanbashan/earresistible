@@ -81,5 +81,11 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
     this.router.navigate(['/release-edit']);
   }
 
+  onDeleteAccount() {
+    if(confirm('Are you sure you want to delete your account? This action is non-reversable.')) {
+      this.isLoadingProfile = true;
+      this.appAuthService.deleteMyUser();
+    }
+  }
 
 }

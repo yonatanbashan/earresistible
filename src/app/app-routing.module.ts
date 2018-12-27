@@ -1,3 +1,4 @@
+import { AddSongComponent } from './add-song/add-song.component';
 import { ReleaseEditComponent } from './release-edit/release-edit.component';
 import { AuthReverseGuard } from './auth/auth-reverse.guard';
 import { AuthGuard } from './auth/auth.guard';
@@ -15,9 +16,10 @@ import { AudioPlayerComponent } from './audio-player/audio-player.component';
 
 const appRoutes: Routes = [
   { path: 'player', component: AudioPlayerComponent },
-  { path: 'profile/:username', component: ProfilePageComponent},
+  { path: 'profile/:username', component: ProfilePageComponent },
   { path: 'profile-edit', component: ProfileEditComponent, canActivate: [AuthGuard] },
   { path: 'release-edit', component: ReleaseEditComponent, canActivate: [AuthGuard] },
+  { path: 'add-song/:releaseId', component: AddSongComponent, canActivate: [AuthGuard] },
   { path: 'details', component: UpdateDetailsComponent, canActivate: [AuthGuard] },
   { path: 'login', component: LoginPageComponent, canActivate: [AuthReverseGuard] },
   { path: 'signup', component: SignupPageComponent, canActivate: [AuthReverseGuard] },

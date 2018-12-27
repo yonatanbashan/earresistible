@@ -134,8 +134,6 @@ export class ProfileEditComponent implements OnInit {
     let locationCountry = this.profileEditForm.value.countrySelect;
     let locationCity = this.profileEditForm.value.city;
 
-    console.log(this.profileEditForm.value.description);
-
     genre = (genre === null) ? '' : genre;
     subGenre = (subGenre === null) ? '' : subGenre;
     bio = (bio === null) ? '' : bio;

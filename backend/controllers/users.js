@@ -1,7 +1,11 @@
 const User = require('../models/user');
+const Profile = require('../models/profile');
+const Release = require('../models/release');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const appConfig = require('../common/app-config');
+const deleteFile = require('../common/delete-file')
+const aux = require('../common/auxiliary')
 var FB = require('fb');
 
 
@@ -172,6 +176,34 @@ exports.loginUser = (req, res, next) => {
     return res.status(401).json({
       message: 'Authorization failed - something is wrong. Error: ' + error,
       code: 'AUTH_FAILED_OTHER'
+    });
+  });
+
+}
+
+exports.deleteUser = (req, res, next) => {
+
+  let releases;
+
+  Profile.findOne({ userId: req.userData.userId })
+  .then((profile) => {
+    releases = profile.releases;
+    imagePath = profile.imagePath;
+    if (imagePath !== appConfig.defaultPhoto){
+      const imageRelativePath = aux.getRelativePath(imagePath);
+      deleteFile(imageRelativePath);
+    }
+    return Profile.deleteOne({ userId: req.userData.userId });
+  })
+  .then(() => {
+    return Release.deleteMany({ _id: { $in: releases }});
+  })
+  .then(() => {
+    return User.deleteOne({_id: req.userData.userId })
+  })
+  .then(() => {
+    res.status(200).json({
+      message: 'User deleted successfully!'
     });
   });
 

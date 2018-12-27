@@ -29,6 +29,7 @@ import { PlayerService } from './player.service';
 
 import { ReleaseEditComponent } from './release-edit/release-edit.component';
 import { ReleaseService } from './release.service';
+import { AddSongComponent } from './add-song/add-song.component';
 
 let socialConfig = new AuthServiceConfig([
   {
@@ -56,6 +57,7 @@ export function provideConfig() {
     SpinnerComponent,
     AudioPlayerComponent,
     ReleaseEditComponent,
+    AddSongComponent,
   ],
   imports: [
     BrowserModule,

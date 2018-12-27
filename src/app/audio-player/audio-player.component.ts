@@ -10,14 +10,14 @@ import { Song } from "../models/song.model";
 export class AudioPlayerComponent implements OnInit, OnDestroy {
 
   // General variables
-  song: Song;
   currentTime: string = '0';
   fullTime: string;
   isPlaying: boolean;
   // Subscription variables
   currentTimeSubscription: any;
   fullTimeSubscription: any;
-  @Input() filePath = 'https://s3.amazonaws.com/earresistible-yonatan-bashan/DoIWannaKnow.mp3';
+  filePath = 'https://s3.amazonaws.com/earresistible-yonatan-bashan/DoIWannaKnow.mp3';
+  @Input() song: Song;
 
   progress = "0%";
   playerWidth = 500;
@@ -30,6 +30,9 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+
+    this.filePath = this.song.filePath;
+
     this.currentTimeFormatted = this.formatTime(parseFloat(this.currentTime));
     this.currentTimeSubscription = this._playerService.currentTime.subscribe(data => {
       this.currentTime = data;

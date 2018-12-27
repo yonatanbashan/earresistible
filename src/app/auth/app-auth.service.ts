@@ -181,5 +181,11 @@ export class AppAuthService {
     this.router.navigate(['/']);
   }
 
+  deleteMyUser() {
+    this.http.delete(this.serverAddress + 'api/users/').subscribe(response => {
+      this.logout();
+    });
+  }
+
 
 }

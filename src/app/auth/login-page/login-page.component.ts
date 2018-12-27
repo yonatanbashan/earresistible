@@ -35,7 +35,6 @@ export class LoginPageComponent implements OnInit, OnDestroy {
 
     this.authStateSubs = this.appAuthService.getAuthStatusListener().subscribe(status => {
       this.isLoading = false;
-      console.log('Done!');
       if (status) {
         this.authFailed = false;
         this.router.navigate(['/dashboard']);
