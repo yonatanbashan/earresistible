@@ -18,10 +18,8 @@ deleteFile = function(filename) {
   };
   s3.deleteObject(params, function (err, data) {
     if (data) {
-      console.log('Success!');
       // TODO: Deleted successfully
     } else {
-      console.log('Fail!');
       // TODO: Deletion failed
     }
   });

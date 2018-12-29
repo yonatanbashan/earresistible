@@ -1,3 +1,5 @@
+import { AuxiliaryService } from './../../auxiliary.service';
+import { ConfirmDialogComponent } from './../../confirm-dialog/confirm-dialog.component';
 import { AppAuthService } from './../../auth/app-auth.service';
 import { ReleaseService } from './../../release.service';
 import { Component, OnInit, Input, Output, EventEmitter, OnChanges, OnDestroy } from '@angular/core';
@@ -5,6 +7,9 @@ import { Release } from 'src/app/models/release.model';
 import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 import { Song } from 'src/app/models/song.model';
+import { MatDialog } from '@angular/material';
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
+
 
 @Component({
   selector: 'app-profile-item',
@@ -16,8 +21,11 @@ export class ProfileItemComponent implements OnInit, OnChanges, OnDestroy {
   constructor(
     private appAuthService: AppAuthService,
     private relService: ReleaseService,
+    public auxService: AuxiliaryService,
     private router: Router,
   ) { }
+
+  faTrash = faTrash;
 
   authStatusSubs: Subscription;
   isAuth: boolean = false;
@@ -30,11 +38,13 @@ export class ProfileItemComponent implements OnInit, OnChanges, OnDestroy {
   ngOnInit() {
 
     this.isLoadingSongs = true;
-    this.relService.getReleaseSongs(this.release)
-    .subscribe((songs: Song[]) => {
-      this.isLoadingSongs = false;
-      this.release.items = songs;
-    });
+    if (this.release.id) {
+      this.relService.getReleaseSongs(this.release.id)
+      .subscribe((songs: Song[]) => {
+        this.isLoadingSongs = false;
+        this.release.items = songs;
+      });
+    }
 
     this.isAuth = (this.appAuthService.getToken() !== null);
 
@@ -53,10 +63,14 @@ export class ProfileItemComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   deleteSong(song: Song) {
-    this.isLoadingSongs = true;
-    this.relService.deleteSong(song).subscribe(() => {
-      this.itemUpdated.emit('update');
-      this.isLoadingSongs = false;
+    this.auxService.openDialog('Delete release', `${song.name}: Are you sure you want to delete this song?`).subscribe((result: boolean) => {
+    if(result) {
+      this.isLoadingSongs = true;
+      this.relService.deleteSong(song).subscribe(() => {
+        this.itemUpdated.emit('update');
+        this.isLoadingSongs = false;
+      });
+    }
     });
   }
 
@@ -81,11 +95,13 @@ export class ProfileItemComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   removeRelease(release: Release) {
-    if(confirm(`Are you sure you want to delete '${release.name}'?`)) {
-      this.relService.deleteRelease(release).subscribe(response => {
-        this.itemUpdated.emit('update');
-      });
-    }
+    this.auxService.openDialog('Delete release', `${release.name}: Are you sure you want to delete this release?`).subscribe((result: boolean) => {
+      if(result) {
+        this.relService.deleteRelease(release).subscribe(response => {
+          this.itemUpdated.emit('update');
+        });
+      }
+    });
   }
 
   publishRelease(release: Release) {

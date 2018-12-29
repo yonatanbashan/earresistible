@@ -1,6 +1,9 @@
+import { Subscription } from 'rxjs';
 import { PlayerService } from "../player.service";
 import { OnInit, OnDestroy, Component, Input } from "@angular/core";
 import { Song } from "../models/song.model";
+
+import { faPlay, faPause } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-audio-player',
@@ -14,56 +17,89 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
   fullTime: string;
   isPlaying: boolean;
   // Subscription variables
-  currentTimeSubscription: any;
-  fullTimeSubscription: any;
+  currentTimeSubscription: Subscription;
+  fullTimeSubscription: Subscription;
+  currentlyPlayingSubscription: Subscription;
+
+  faPlay = faPlay;
+  faPause = faPause;
+
   filePath = 'https://s3.amazonaws.com/earresistible-yonatan-bashan/DoIWannaKnow.mp3';
   @Input() song: Song;
 
   progress = "0%";
-  playerWidth = 500;
+  playerWidth = 350;
   playerWidthString = this.playerWidth.toString() + 'px';
+  playStarted = false;
+  isPaused: boolean;
 
   currentTimeFormatted: string;
   fullTimeFormatted: string;
 
-  constructor(private _playerService: PlayerService) {
+  constructor(private playerService: PlayerService) {
   }
 
   ngOnInit() {
 
     this.filePath = this.song.filePath;
 
-    this.currentTimeFormatted = this.formatTime(parseFloat(this.currentTime));
-    this.currentTimeSubscription = this._playerService.currentTime.subscribe(data => {
-      this.currentTime = data;
-      this.currentTimeFormatted = this.formatTime(parseFloat(this.currentTime));
-      this.progress = (parseFloat(this.currentTime) / parseFloat(this.fullTime) * 100).toString() + '%';
+    this.currentlyPlayingSubscription = this.playerService.currentlyPlayingFileName.subscribe(filename => {
+      if (this.filePath !== filename) {
+        this.isPlaying = false;
+        this.currentTime = '0';
+        this.currentTimeFormatted = '0:00';
+        this.progress = '0%';
+      } else {
+        this.isPlaying = true;
+      }
     });
-    this.fullTimeSubscription = this._playerService.fullTime.subscribe(
-      data => {
-        this.fullTime = data
+    this.currentTimeFormatted = this.formatTime(parseFloat(this.currentTime));
+    this.currentTimeSubscription = this.playerService.currentTime.subscribe(data => {
+      if (this.isPlaying) {
+        this.currentTime = data;
+        this.currentTimeFormatted = this.formatTime(parseFloat(this.currentTime));
+        this.progress = (parseFloat(this.currentTime) / parseFloat(this.fullTime) * 100).toString() + '%';
+      }
+    });
+    this.fullTimeSubscription = this.playerService.fullTime.subscribe(data => {
+      if (this.isPlaying) {
+        this.fullTime = data;
         this.fullTimeFormatted = this.formatTime(parseFloat(this.fullTime));
-      });
-    this._playerService.setPlayer(this.filePath);
+      }
+    });
+  }
+
+  initializePlay() {
+    this.playStarted = true;
+    this.playerService.setPlayer(this.filePath);
   }
 
   toggleAudio() {
-    this.isPlaying = this._playerService.toggleAudio();
+    if (!this.playStarted || !this.isPlaying) {
+      this.initializePlay();
+      this.isPaused = false;
+    } else {
+      this.isPaused = !this.isPaused;
+    }
+    this.playerService.toggleAudio();
   }
 
   stopAudio() {
-    this._playerService.stopAudio();
+    this.playerService.stopAudio();
   }
 
   playbackSkip(e: Event) {
-    const time = (<any>e).offsetX / this.playerWidth * parseInt(this.fullTime);
-    this._playerService.playbackSkip(time);
+    if(this.isPlaying) {
+      const time = (<any>e).offsetX / this.playerWidth * parseInt(this.fullTime);
+      this.playerService.playbackSkip(time);
+    }
   }
 
   ngOnDestroy() {
     this.stopAudio();
     this.currentTimeSubscription.unsubscribe();
     this.fullTimeSubscription.unsubscribe();
+    this.currentlyPlayingSubscription.unsubscribe();
   }
 
   formatTime(time: number) {

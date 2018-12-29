@@ -2,6 +2,7 @@ const express = require('express');
 
 const router = express.Router();
 const checkAuth = require('../middleware/check-auth');
+const tryAuth = require('../middleware/try-auth');
 
 const Release = require('../models/release');
 const ReleaseController = require('../controllers/releases');
@@ -23,8 +24,8 @@ router.put('/publish', checkAuth, ReleaseController.publishRelease);
 
 
 // GET requests
-router.get('/user', ReleaseController.getUserReleases);
-router.get('/get', ReleaseController.getReleaseById);
+router.get('/user', tryAuth, ReleaseController.getUserReleases);
+router.get('/get', tryAuth, ReleaseController.getReleaseById);
 
 
 // DELETE requests

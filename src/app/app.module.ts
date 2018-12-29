@@ -1,8 +1,10 @@
+import { AuxiliaryService } from './auxiliary.service';
 import { AppAuthService } from './auth/app-auth.service';
 import { AuthInterceptor } from './auth/auth-interceptor';
 import { ConnectionService } from './connection.service';
 import { AppRoutingModule } from './app-routing.module';
 import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
@@ -23,13 +25,18 @@ import { ProfileItemComponent } from './profile-page/profile-item/profile-item.c
 import { SpinnerComponent } from './spinner/spinner.component';
 
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatNativeDateModule } from '@angular/material';
+import { MatNativeDateModule, MatDialogModule } from '@angular/material';
 import { AudioPlayerComponent } from './audio-player/audio-player.component';
 import { PlayerService } from './player.service';
 
 import { ReleaseEditComponent } from './release-edit/release-edit.component';
 import { ReleaseService } from './release.service';
 import { AddSongComponent } from './add-song/add-song.component';
+
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component'
+import { NewlinePipe } from './newline.pipe';
+
 
 let socialConfig = new AuthServiceConfig([
   {
@@ -58,16 +65,21 @@ export function provideConfig() {
     AudioPlayerComponent,
     ReleaseEditComponent,
     AddSongComponent,
+    ConfirmDialogComponent,
+    NewlinePipe
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
+    BrowserAnimationsModule,
     FormsModule,
     ReactiveFormsModule,
     SocialLoginModule,
     HttpClientModule,
     MatDatepickerModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    MatDialogModule,
+    FontAwesomeModule,
   ],
   providers: [
     MatDatepickerModule,
@@ -80,8 +92,13 @@ export function provideConfig() {
     ReleaseService,
     AppAuthService,
     PlayerService,
-    ConnectionService
+    ConnectionService,
+    AuxiliaryService
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [
+    ConfirmDialogComponent
+  ],
+
 })
 export class AppModule { }

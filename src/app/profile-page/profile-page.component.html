@@ -32,6 +32,11 @@
             <div class="app-text-1 app-text-small" *ngIf="profile.locationCountry === ''">
                 {{ profile.locationCity }}
             </div>
+            <div class="app-text-1 app-text-smaller" [innerHTML]="bioText | newline"></div>
+            <button
+              *ngIf="profile.bio.length > maxChar"
+              class="btn btn-primary app-text-1 app-form-btn-text"
+              (click)="toggleBio()">{{ bioBtnText }}</button>
             </div>
             <div class="col-3" *ngIf="isMe">
               <div class="row justify-content-end">
@@ -56,7 +61,6 @@
   <span *ngIf="!isLoadingReleases">
     <div class="row my-3" *ngFor="let release of profile.releases">
       <app-profile-item
-        *ngIf="isMe || release.published"
         [release]="release"
         (itemUpdated)="updateProfile()"
         class="col-10 my-3 offset-1 shadow-lg app-card"></app-profile-item>

@@ -1,5 +1,6 @@
 const Release = require('../models/release');
 const Profile = require('../models/profile');
+const Song = require('../models/song');
 const appConfig = require('../common/app-config');
 
 exports.addRelease = (req, res, next) => {
@@ -20,23 +21,10 @@ exports.addRelease = (req, res, next) => {
   const newRelease = new Release(releaseInfo);
   newRelease.save()
   .then(release => {
-    newReleaseItem = release;
-    return Profile.findOne({ userId: req.userData.userId })
-  })
-  .then((profile) => {
-    if (!profile.releases.includes(newReleaseItem._id)) {
-      let newReleases = profile.releases;
-      newReleases.push(newReleaseItem._id);
-      return Profile.findOneAndUpdate( { userId: req.userData.userId }, { releases: newReleases })
-    } else {
-      return;
-    }
-  })
-  .then(() => {
     res.status(200).json({
       message: 'User release added successfully!',
-      release: newReleaseItem
-    })
+      release: release
+    });
   });
 
 }
@@ -69,6 +57,18 @@ exports.getUserReleases = (req, res, next) => {
 
   query.find()
   .then(releases => {
+    let filterReleases = true;
+
+    if(req.userData) {
+      if(req.userData.userId === req.query.userId) {
+        filterReleases = false;
+      }
+    }
+
+    if (filterReleases) {
+      releases = releases.filter(release => release.published);
+    }
+
     res.status(200).json({
       message: 'Releases fetched successfully!',
       releases: releases
@@ -86,11 +86,21 @@ exports.getUserReleases = (req, res, next) => {
 exports.deleteRelease = (req, res, next) => {
   Release.findByIdAndDelete(req.query.releaseId)
   .then(() => {
-    return Profile.findOneAndUpdate({ userId: req.userData.userId }, { $pull: { releases: req.query.releaseId } });
+
+    return Song.find({ releaseId: req.query.releaseId } );
+  })
+  .then(songs => {
+    songs.forEach(song => {
+      const songRelativePath = aux.getRelativePath(song.filePath);
+      deleteFile(songRelativePath);
+    });
   })
   .then(() => {
+    return Release.findByIdAndRemove(req.query.releaseId);
+  })
+  .then(release => {
     res.status(201).json({
-      message: 'Releases removed successfully from profile!'
+      message: `Release ${release._id} removed successfully from profile!`
     });
   });
 }

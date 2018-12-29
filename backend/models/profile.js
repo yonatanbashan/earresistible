@@ -11,7 +11,6 @@ const profileSchema = mongoose.Schema({
   locationCountry: { type: String, default: ''},
   genre: { type: String, default: ''},
   subGenre: { type: String, default: ''},
-  releases: [{ type: mongoose.Schema.Types.ObjectId, ref: "Release" }],
   userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", unique: true },
 });
 

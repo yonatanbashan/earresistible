@@ -4,14 +4,23 @@ import { Subject } from "rxjs";
 @Injectable()
 export class PlayerService {
 
-  private audio: any;
-  public currentTime: Subject<string> = new Subject<string>();
-  public fullTime: Subject<string> = new Subject<string>();
+  audio: any;
+  currentTime: Subject<string> = new Subject<string>();
+  fullTime: Subject<string> = new Subject<string>();
+  currentlyPlayingFileName: Subject<string> = new Subject<string>();
+  playStarted: boolean= false;
 
 
   constructor() {}
 
   setPlayer(audioFile: string) {
+    if(!this.playStarted) {
+      this.playStarted = true;
+    } else {
+      this.audio.pause();
+      this.audio = null;
+    }
+    this.currentlyPlayingFileName.next(audioFile);
     this.audio = new Audio(audioFile);
     this.audio.oncanplaythrough = () => {
       this.fullTime.next(this.audio.duration);
@@ -27,8 +36,10 @@ export class PlayerService {
   }
 
   stopAudio() {
-    this.audio.pause();
-    this.audio.currentTime = 0;
+    if(this.audio) {
+      this.audio.pause();
+      this.audio.currentTime = 0;
+    }
   }
 
   toggleAudio() {

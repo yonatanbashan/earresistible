@@ -59,7 +59,6 @@ export class ProfileService {
         locationCountry: undefined,
         genre: undefined,
         subGenre: undefined,
-        releases: [],
         userId: authData.id
       }
     }

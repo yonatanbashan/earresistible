@@ -91,8 +91,8 @@ export class ReleaseService {
 
   }
 
-  getReleaseSongs(release: Release) {
-    const queryParams = `?releaseId=${release.id}&userId=${release.userId}`;
+  getReleaseSongs(releaseId: string) {
+    const queryParams = `?releaseId=${releaseId}`;
     return this.http.get(this.serverAddress + 'api/songs/release/' + queryParams)
     .pipe(map(this.mapSongs));
   }

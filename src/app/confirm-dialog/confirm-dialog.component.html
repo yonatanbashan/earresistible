@@ -1,0 +1,12 @@
+<div mat-dialog-title class="app-main-body">
+  <div class="app-text-1 app-text-medium" mat-dialog-title>{{ data.title }}</div>
+</div>
+
+<div class="mat-dialog-content" class="app-main-body">
+  <div class="app-text-1 app-text-small"> {{ data.content }}</div>
+</div>
+<br>
+<mat-dialog-actions align="end">
+  <button mat-button [mat-dialog-close]="false" mat-dialog-close cdkFocusInitial class="btn btn-primary app-form-btn-text mx-1">Cancel</button>
+  <button mat-button [mat-dialog-close]="true" class="btn btn-primary app-form-btn-danger mx-1">Delete</button>
+</mat-dialog-actions>
