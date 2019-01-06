@@ -10,6 +10,7 @@ const usersRoutes = require('./routes/users');
 const songsRoutes = require('./routes/songs');
 const releasesRoutes = require('./routes/releases');
 const profilesRoutes = require('./routes/profiles');
+const tagsRoutes = require('./routes/tags');
 
 // Instantiate express app
 const app = express();
@@ -53,6 +54,7 @@ app.use('/api/users', usersRoutes);
 app.use('/api/songs', songsRoutes);
 app.use('/api/releases', releasesRoutes);
 app.use('/api/profiles', profilesRoutes);
+app.use('/api/tags', tagsRoutes);
 
 
 // This is the 'valid' way to export the express app

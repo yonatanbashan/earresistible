@@ -3,46 +3,35 @@ const Release = require('../models/release');
 const User = require('../models/user');
 const appConfig = require('../common/app-config');
 
-exports.getProfile = (req, res, next) => {
-
-  if(req.query.username) {
-    User.findOne({ username: req.query.username })
-    .then(user => {
-      return Profile.findOne( {userId: user._id } );
-    })
-    .then(profile => {
-      res.status(200).json({
-        profile: profile,
-        message: 'Profile fetched successfully!'
-      });
-    });
-  } else if(req.query.id) {
-    Profile.findOne( {userId: req.query.id } ).then(profile => {
-      res.status(200).json({
-        profile: profile,
-        message: 'Profile fetched successfully!'
-      });
-    });
+exports.getProfile = async (req, res, next) => {
+  let profile;
+  try {
+    if(req.query.username) {
+      const user = await User.findOne({ username: req.query.username });
+      profile = await Profile.findOne( {userId: user._id } );
+    } else if(req.query.id) {
+      profile = await Profile.findOne( {userId: req.query.id } );
+    }
+    res.status(200).json({ profile: profile, message: 'Profile fetched successfully!'});
+  } catch (err) {
+    res.status(500).json({ message: 'Failed to fetch profile', error: err });
   }
-
 }
 
 
-exports.addProfile = (req, res, next) => {
+exports.addProfile = async (req, res, next) => {
   const newProfile = req.body.profile;
   const profile = new Profile(newProfile);
   profile.imagePath = appConfig.defaultPhoto;
-  profile.save().then((profile) => {
-    res.status(201).json({
-      message: 'Profile created successfully!',
-      profile: profile
-    });
-  }, (error) => {
-    console.log('Error:' + error);
-  });
+  try {
+    const profile = await profile.save();
+    res.status(201).json({ message: 'Profile created successfully!', profile: profile });
+  } catch (err) {
+    res.status(500).json({ message: 'Failed to create profile', error: err });
+  }
 }
 
-exports.updateProfile = (req, res, next) => {
+exports.updateProfile = async (req, res, next) => {
 
   const url = appConfig.AWSAddressSimple;
   let profileInfo = req.body;
@@ -50,34 +39,28 @@ exports.updateProfile = (req, res, next) => {
     profileInfo.image = undefined;
     profileInfo.imagePath = url + '/' + req.file.key;
   }
-  Profile.findOneAndUpdate({ userId: req.userData.userId }, profileInfo)
-  .then(profile => {
-    res.status(200).json({
-      message: 'User profile updated successfully!'
-    })
-  })
-  .catch((error) => {
-    console.log(error)
-    res.status(401).json({
-      message: 'An error occurred during profile update attempt!'
-    });
-  })
+
+  try {
+    const profile = await Profile.findOneAndUpdate({ userId: req.userData.userId }, profileInfo);
+    res.status(200).json({ message: 'User profile updated successfully!' , profile: profile })
+  } catch (err) {
+    res.status(500).json({ message: 'Failed to update profile', error: err });
+  }
 
 }
 
 
-exports.deleteField = (req, res, next) => {
+exports.deleteField = async (req, res, next) => {
 
   if (req.query.field === 'photo') {
-    Profile.findOneAndUpdate({ userId: req.userData.userId }, {
-      imagePath: appConfig.defaultPhoto
-    })
-    .then(profile => {
-      res.status(201).json({
-        profile: profile,
-        message: 'Profile photo deleted successfully!'
-      });
-    });
+    try {
+      const profile = await Profile.findOneAndUpdate(
+        { userId: req.userData.userId },
+        { imagePath: appConfig.defaultPhoto });
+      res.status(201).json({ profile: profile, message: 'Profile photo deleted successfully!' });
+    } catch (err) {
+      res.status(500).json({ message: 'Failed to delete photo from profile', error: err });
+    }
   }
 }
 

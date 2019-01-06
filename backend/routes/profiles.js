@@ -7,9 +7,6 @@ const Profile = require('../models/profile');
 const ProfileController = require('../controllers/profiles');
 const photoUpload = require("../middleware/photo-upload");
 
-// User handling
-
-
 // POST requests
 
 // Add new release

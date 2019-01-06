@@ -16,12 +16,16 @@ deleteFile = function(filename) {
     Bucket: appConfig.AWSBucketName,
     Key: filename
   };
-  s3.deleteObject(params, function (err, data) {
-    if (data) {
-      // TODO: Deleted successfully
-    } else {
-      // TODO: Deletion failed
-    }
+
+  return new Promise(function(resolve, reject) {
+    s3.deleteObject(params, function (err, data) {
+      if (data) {
+        resolve(data);
+      } else {
+        console.log('Failed deleting file. Params:', params)
+        reject(new Error('Deleting file failed. Error:', err));
+      }
+    });
   });
 
 }

@@ -7,8 +7,6 @@ const Song = require('../models/song');
 const SongController = require('../controllers/songs');
 const audioUpload = require('../middleware/audio-upload')
 
-// User handling
-
 
 // POST requests
 

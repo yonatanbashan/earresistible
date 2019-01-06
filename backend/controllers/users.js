@@ -9,16 +9,15 @@ const aux = require('../common/auxiliary')
 var FB = require('fb');
 
 
-exports.getUserByName = (req, res, next) => {
+exports.getUserByName = async (req, res, next) => {
 
   if(req.params.username) {
-    User.findOne({username: req.params.username})
-    .then(user => {
-      res.status(200).json({
-        message: 'User fetched successfully',
-        user: user
-      });
-    });
+    try {
+    const user = await User.findOne({username: req.params.username});
+      res.status(200).json({ message: 'User fetched successfully', user: user });
+    } catch (err) {
+      res.status(500).json({ message: 'Failed to get user', error: err });
+    }
   } else {
     next();
   }
@@ -36,7 +35,7 @@ exports.verifyFBToken = (req, res, next) => {
     FB.setAccessToken(token);
     FB.api('me', (response) => {
       if (!response.id) {
-        res.status(401).json({
+        res.status(404).json({
           message: 'FB auth failed - token is invalid!',
           code: 'AUTH_FAILED'
         });
@@ -50,66 +49,58 @@ exports.verifyFBToken = (req, res, next) => {
 
 }
 
-exports.addUser = (req, res, next) => {
+exports.addUser = async (req, res, next) => {
   let email = req.body.email;
 
   if (email) { // If adding new user with email, check that it doesn't exist
-
-    User.find({ email: email })
-    .then(document => {
-      if (document.length > 0) {
-        res.status(401).json({
-          message: 'A username with this email already exists!',
-          code: 'MAIL_EXISTS'
-        });
-      }
-    });
-
+    const users = await  User.find({ email: email });
+    if (users.length > 0) {
+      res.status(401).json({ message: 'A username with this email already exists!', code: 'MAIL_EXISTS' });
+    }
   }
 
-  bcrypt.hash(req.body.password, 10)
-  .then(hash => {
-      const user = new User({
-      username: req.body.username,
-      password: hash,
-      email:    email,
-    });
-    user.save()
-    .then(createdUser => {
-      const token = jwt.sign(
-        {
-          username: createdUser.username,
-          email: createdUser.email,
-          id: createdUser._id
-        },
-          appConfig.cryptString,
-        { expiresIn: '1h' }
-      );
-      res.status(201).json({
-        message: 'User added successfully',
-        token: token,
-        expireLength: 3600
-      });
-    })
-    .catch(err => {
-      res.status(500).json({
-        error: err
-      })
-    })
+  const hash = await bcrypt.hash(req.body.password, 10);
+  const user = new User({
+    username: req.body.username,
+    password: hash,
+    email:    email,
   });
+
+  try {
+    const createdUser = await user.save();
+    const token = jwt.sign(
+      {
+        username: createdUser.username,
+        email: createdUser.email,
+        id: createdUser._id
+      },
+        appConfig.cryptString,
+      { expiresIn: '1h' }
+    );
+
+    res.status(201).json({
+      message: 'User added successfully',
+      token: token,
+      expireLength: 3600
+    });
+
+  } catch (err) {
+    res.status(500).json({ error: err })
+  }
+
 
 };
 
-exports.loginUser = (req, res, next) => {
+exports.loginUser = async (req, res, next) => {
 
   let foundUser;
   let query;
-
   if (req.query.username && req.query.email) {
     res.status(401).json({
       message: 'Error: please provide either email or username. Can\'t use both at the same time.',
       code: 'EITHER_MAIL_OR_USERNAME'
     });
+    return;
   }
 
   if (!req.query.username && !req.query.email) {
@@ -117,6 +108,7 @@ exports.loginUser = (req, res, next) => {
       message: 'Error: please provide an email or a username',
       code: 'NO_MAIL_OR_USERNAME'
     });
+    return;
   }
 
   if (req.query.username) {
@@ -128,30 +120,19 @@ exports.loginUser = (req, res, next) => {
     query  = User.findOne({ email: req.query.email });
   }
 
-  let failed = false;
-
   // Login requests
-  query.findOne()
-  .then(document => {
-    if (!document) {
-      failed = true;
-      return;
-    }
-    foundUser = document;
-    return bcrypt.compare(req.query.password, document.password);
-  })
-  .then(result => {
-
-    if(failed) {
-      res.status(401).json({
+  try {
+    const user = await query.findOne();
+    if (!user) {
+      return res.status(500).json({
         message: 'User not found!',
         code: 'USER_NOT_FOUND'
       });
-      return;
     }
-
+    foundUser = user;
+    const result = await bcrypt.compare(req.query.password, user.password);
     if (!result && !req.query.fbToken) {
-      return res.status(401).json({
+      return res.status(404).json({
         message: 'Authentication failed! Password might be incorrect',
         code: 'AUTH_FAILED'
       });
@@ -165,47 +146,39 @@ exports.loginUser = (req, res, next) => {
       appConfig.cryptString,
       { expiresIn: '1h' }
     );
-    res.status(200).json({
+    return res.status(200).json({
       token: token,
       expireLength: 3600,
       message: 'User logged in successfully!',
     });
-
-  })
-  .catch(error => {
-    return res.status(401).json({
-      message: 'Authorization failed - something is wrong. Error: ' + error,
+  } catch (err) {
+    return res.status(404).json({
+      message: 'Authorization failed - something is wrong. Error: ' + err,
       code: 'AUTH_FAILED_OTHER'
     });
-  });
+  }
 
 }
 
-exports.deleteUser = (req, res, next) => {
+exports.deleteUser = async (req, res, next) => {
 
   let releases;
 
-  Profile.findOne({ userId: req.userData.userId })
-  .then((profile) => {
+  try {
+    const profile = await Profile.findOne({ userId: req.userData.userId });
     releases = profile.releases;
     imagePath = profile.imagePath;
     if (imagePath !== appConfig.defaultPhoto){
       const imageRelativePath = aux.getRelativePath(imagePath);
-      deleteFile(imageRelativePath);
+      const result = await deleteFile(imageRelativePath);
     }
-    return Profile.deleteOne({ userId: req.userData.userId });
-  })
-  .then(() => {
-    return Release.deleteMany({ _id: { $in: releases }});
-  })
-  .then(() => {
-    return User.deleteOne({_id: req.userData.userId })
-  })
-  .then(() => {
-    res.status(200).json({
-      message: 'User deleted successfully!'
-    });
-  });
+    const deletedProfile = await Profile.deleteOne({ userId: req.userData.userId });
+    const deletedReleases = await Release.deleteMany({ _id: { $in: releases }});
+    const user = await User.deleteOne({_id: req.userData.userId });
+    res.status(200).json({ message: 'User deleted successfully!' });
+  } catch (err) {
+    res.status(500).json({ message: 'Could not delete user!', error: err })
+  }
 
 }
 

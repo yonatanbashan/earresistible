@@ -8,9 +8,6 @@ const Release = require('../models/release');
 const ReleaseController = require('../controllers/releases');
 const photoUpload = require("../middleware/photo-upload");
 
-// User handling
-
-
 // POST requests
 
 // Add new release

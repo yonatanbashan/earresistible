@@ -4,20 +4,10 @@ const appConfig = require('../common/app-config');
 const aux = require('../common/auxiliary')
 const deleteFile = require('../common/delete-file')
 
-exports.addSong = (req, res, next) => {
-
+exports.addSong = async (req, res, next) => {
   const url = appConfig.AWSAddressSimple;
   let songInfo = req.body;
-  if(req.file !== undefined) {
-    songInfo.songFile = undefined;
-    songInfo.filePath = url + '/' + req.file.key;
-  } else {
-    res.status(401).json({
-      message: 'Song not provided!'
-    });
-    return;
-  }
-
+  songInfo.filePath = url + '/' + req.file.key;
   let newSong = new Song({
     name: songInfo.name,
     plays: 0,
@@ -27,41 +17,36 @@ exports.addSong = (req, res, next) => {
     userId: req.userData.userId
   });
 
-  newSong.save()
-  .then(song => {
-    res.status(201).json({
-      message: 'Song added successfully!',
-      song: song
-    });
-  });
+  try {
+    const song = await newSong.save();
+    res.status(201).json({ message: 'Song added successfully!', song: song});
+  } catch (err) {
+    res.status(500).json({ message: 'Failed to add song', error: err });
+  }
 }
 
-exports.getReleaseSongs = (req, res, next) => {
-  Song.find({ releaseId: req.query.releaseId })
-  .then(songs => {
-    res.status(200).json({
-      message: 'Songs fetched successfully!',
-      songs: songs
-    });
-  });
 
+exports.getReleaseSongs = async (req, res, next) => {
+  try {
+    const songs = await Song.find({ releaseId: req.query.releaseId })
+    res.status(200).json({message: 'Songs fetched successfully!', songs: songs});
+  } catch (err) {
+    res.status(500).json({ message: 'Failed to fetch songs', error: err });
+  }
 }
 
-exports.deleteSong = (req, res, next) => {
-  Song.findOne({ _id: req.query.songId, userId: req.userData.userId } )
-  .then(song => {
-    // TODO: Check if this is MY song
+
+exports.deleteSong = async (req, res, next) => {
+  // TODO: Check if this is MY song
+  try {
+    const song = await Song.findOne({ _id: req.query.songId, userId: req.userData.userId } );
     const songRelativePath = aux.getRelativePath(song.filePath);
-    deleteFile(songRelativePath);
-  })
-  .then(() => {
-      return Song.findByIdAndRemove(req.query.songId);
-  })
-  .then(song => {
-    res.status(200).json({
-      message: `Song deleted successfully!`
-    });
-  })
+    const result = await deleteFile(songRelativePath);
+    const songDeleted = await Song.findByIdAndRemove(req.query.songId);
+    res.status(200).json({message: `Song deleted successfully!`});
+  } catch (err) {
+    res.status(500).json({message: 'Deleting song failed!', error: err });
+  }
 }
 
 
