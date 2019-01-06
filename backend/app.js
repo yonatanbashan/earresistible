@@ -1,6 +1,7 @@
 const path = require("path");
 const express = require('express');
 const bodyParser = require('body-parser');
+const morgan = require('morgan');
 const appConfig = require('./common/app-config.js')
 
 const mongoose = require('mongoose');
@@ -30,6 +31,9 @@ mongoose.connect(connectAddress)
 // Add body parser for JSON requests. Adds 'body' field for req parameters.
 app.use(bodyParser.json());
 app.use("/images", express.static(path.join("backend/images")));
+
+// TODO: set inside 'if' only in dev
+app.use(morgan('dev'));
 
 // Access control: to avoid CORS errors
 app.use((req, res, next) => {

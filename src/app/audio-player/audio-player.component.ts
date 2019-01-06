@@ -59,6 +59,9 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
         this.currentTime = data;
         this.currentTimeFormatted = this.formatTime(parseFloat(this.currentTime));
         this.progress = (parseFloat(this.currentTime) / parseFloat(this.fullTime) * 100).toString() + '%';
+        if(this.currentTime === this.fullTime) {
+          this.isPaused = true;
+        }
       }
     });
     this.fullTimeSubscription = this.playerService.fullTime.subscribe(data => {

@@ -37,7 +37,6 @@ exports.addSong = (req, res, next) => {
 }
 
 exports.getReleaseSongs = (req, res, next) => {
-  console.log(req.query);
   Song.find({ releaseId: req.query.releaseId })
   .then(songs => {
     res.status(200).json({
@@ -49,7 +48,6 @@ exports.getReleaseSongs = (req, res, next) => {
 }
 
 exports.deleteSong = (req, res, next) => {
-  console.log(req.query);
   Song.findOne({ _id: req.query.songId, userId: req.userData.userId } )
   .then(song => {
     // TODO: Check if this is MY song
