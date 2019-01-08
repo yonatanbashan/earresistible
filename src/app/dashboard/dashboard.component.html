@@ -1,3 +1,86 @@
-<p>
-  dashboard works!
-</p>
+<span *ngIf="!isLoadingMatches && !isLoadingProfile && !isLoadingReleases">
+  <div class="container">
+    <div class="shadow-lg app-card">
+      <div class="row my-5 justify-content-center align-items-center">
+        <div class="col-4">
+          <div class="row justify-content-center">
+            <div class="profile-image-cropper app-item-shadow-large">
+              <img [src]="profile.imagePath" class="profile-image my-2 mx-2" [title]="profile.artistName">
+            </div>
+          </div>
+        </div>
+        <div class="col-8">
+          <div class="app-text-1 app-text-large">
+            {{ profile.artistName }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row my-5" *ngIf="matchingProfiles.length > 0">
+    <div class="col-12">
+      <div class="row justify-content-center my-3">
+        <span class="app-text-1 app-text-medium">Releases:</span>
+      </div>
+    </div>
+    <div class="col-8 offset-2 shadow-lg app-card">
+      <div class="row my-3" *ngFor="let release of releases">
+        <div class="col-1">
+          <div class="preview-image-cropper app-item-shadow-large">
+              <img
+                [src]="release.imagePath"
+                class="preview-image my-2 mx-2"
+                style="cursor: pointer;"
+                [title]="release.name">
+          </div>
+        </div>
+        <div class="col-11">
+          <div class="row justify-content-center">
+            <div class="app-text-1 app-text-medium">{{ release.name }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row my-5" *ngIf="matchingProfiles.length > 0">
+    <div class="col-12">
+      <div class="row justify-content-center my-3">
+        <span class="app-text-1 app-text-medium">Similar artists:</span>
+      </div>
+    </div>
+    <div class="col-8 offset-2 shadow-lg app-card">
+      <span *ngFor="let profile of matchingProfiles; let i = index">
+        <div class="row justify-content-center">
+          <div class="col-2">
+            <div class="preview-image-cropper app-item-shadow-large">
+                <img
+                  [routerLink]="['/profile', matchingUsers[i].username]"
+                  [src]="profile.imagePath"
+                  class="preview-image my-2 mx-2"
+                  style="cursor: pointer;"
+                  [title]="profile.artistName">
+            </div>
+          </div>
+          <div class="col-10 py-2">
+            <div class="row">
+                <span
+                  class="app-text-link app-text-small"
+                  [routerLink]="['/profile', matchingUsers[i].username]"
+                  style="cursor: pointer;">
+                  {{ profile.artistName }}</span>
+            </div>
+            <div class="row">
+                <span class="app-text-1 app-text-small">{{ getPreviewText(profile) }}</span>
+            </div>
+            <div class="row justify-content-center">
+            </div>
+          </div>
+        </div>
+      </span>
+    </div>
+  </div>
+</span>
+<span *ngIf="isLoadingMatches || isLoadingProfile || isLoadingReleases">
+  <app-spinner></app-spinner>
+</span>
+

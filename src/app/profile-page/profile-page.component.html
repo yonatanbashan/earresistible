@@ -66,40 +66,40 @@
     </div>
   </div>
   <div class="row my-5" *ngIf="matchingProfiles.length > 0">
-      <div class="col-10 offset-1 shadow-lg app-card">
+    <div class="col-10 offset-1 shadow-lg app-card">
+      <div class="row justify-content-center">
+          <span class="app-text-1 app-text-medium">Similar artists:</span>
+      </div>
+      <span *ngFor="let profile of matchingProfiles; let i = index">
         <div class="row justify-content-center">
-            <span class="app-text-1 app-text-medium">Similar artists:</span>
-        </div>
-        <span *ngFor="let profile of matchingProfiles; let i = index">
-          <div class="row justify-content-center">
-            <div class="col-2">
-              <div class="preview-image-cropper app-item-shadow-large">
-                  <img
-                    [routerLink]="['/profile', matchingUsers[i].username]"
-                    [src]="profile.imagePath"
-                    class="preview-image my-2 mx-2"
-                    style="cursor: pointer;"
-                    [title]="profile.artistName">
-              </div>
-            </div>
-            <div class="col-10 py-2">
-              <div class="row">
-                  <span
-                    class="app-text-link app-text-small"
-                    [routerLink]="['/profile', matchingUsers[i].username]"
-                    style="cursor: pointer;">
-                    {{ profile.artistName }}</span>
-              </div>
-              <div class="row">
-                  <span class="app-text-1 app-text-small">{{ getPreviewText(profile) }}</span>
-              </div>
-              <div class="row justify-content-center">
-              </div>
+          <div class="col-2">
+            <div class="preview-image-cropper app-item-shadow-large">
+                <img
+                  [routerLink]="['/profile', matchingUsers[i].username]"
+                  [src]="profile.imagePath"
+                  class="preview-image my-2 mx-2"
+                  style="cursor: pointer;"
+                  [title]="profile.artistName">
             </div>
           </div>
-        </span>
-      </div>
+          <div class="col-10 py-2">
+            <div class="row">
+                <span
+                  class="app-text-link app-text-small"
+                  [routerLink]="['/profile', matchingUsers[i].username]"
+                  style="cursor: pointer;">
+                  {{ profile.artistName }}</span>
+            </div>
+            <div class="row">
+                <span class="app-text-1 app-text-small">{{ getPreviewText(profile) }}</span>
+            </div>
+            <div class="row justify-content-center">
+            </div>
+          </div>
+        </div>
+      </span>
     </div>
+  </div>
   <div class="row my-3" *ngFor="let release of profile.releases">
     <app-profile-item
       [release]="release"
