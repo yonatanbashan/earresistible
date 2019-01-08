@@ -1,3 +1,4 @@
+import { TagService } from './tag.service';
 import { AuxiliaryService } from './auxiliary.service';
 import { AppAuthService } from './auth/app-auth.service';
 import { AuthInterceptor } from './auth/auth-interceptor';
@@ -36,6 +37,7 @@ import { AddSongComponent } from './add-song/add-song.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component'
 import { NewlinePipe } from './newline.pipe';
+import { TagsComponent } from './tags/tags.component';
 
 
 let socialConfig = new AuthServiceConfig([
@@ -66,7 +68,8 @@ export function provideConfig() {
     ReleaseEditComponent,
     AddSongComponent,
     ConfirmDialogComponent,
-    NewlinePipe
+    NewlinePipe,
+    TagsComponent
   ],
   imports: [
     BrowserModule,
@@ -92,6 +95,7 @@ export function provideConfig() {
     ReleaseService,
     AppAuthService,
     PlayerService,
+    TagService,
     ConnectionService,
     AuxiliaryService
   ],

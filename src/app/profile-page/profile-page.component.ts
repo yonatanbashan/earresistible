@@ -3,10 +3,12 @@ import { Subscription } from 'rxjs';
 import { AppAuthService } from './../auth/app-auth.service';
 import { ProfileService } from './../profile.service';
 import { Profile } from './../models/profile.model';
+import { AuthData } from './../models/auth-data.model';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ReleaseService } from '../release.service';
 import { shortText } from '../common/short-text';
+import { TagService } from '../tag.service';
 
 @Component({
   selector: 'app-profile-page',
@@ -20,12 +22,16 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
     private relService: ReleaseService,
     private appAuthService: AppAuthService,
     private auxService: AuxiliaryService,
+    private tagService: TagService,
     private router: Router,
     private route: ActivatedRoute,
   ) { }
   profile: Profile;
+  matchingProfiles: Profile[];
+  matchingUsers: AuthData[];
   isLoadingProfile = true;
   isLoadingReleases = true;
+  isLoadingMatches = true;
   isMe = false;
   userId: string;
   username: string;
@@ -36,6 +42,10 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
   bioBtnText: string = 'Show full bio';
   maxChar = 50;
 
+  // For similar artists
+  tagNumToMatchArtists = 5;
+  maxMatchedArtists = 3;
+
   ngOnInit() {
 
     this.isAuth = (this.appAuthService.getToken() !== null);
@@ -44,12 +54,19 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
       this.isAuth = status;
     });
 
-
     this.route.params.subscribe((params) => {
+      this.isLoadingMatches = true;
       this.username = params['username'];
       this.profService.getUserByUsername(this.username)
       .subscribe((response: any) => {
         this.userId = response.user._id;
+        this.tagService.getMatchingUsers(this.userId, this.tagNumToMatchArtists, this.maxMatchedArtists).subscribe((response: any) => {
+          this.matchingUsers = response.users;
+          this.tagService.getMatchingProfiles(response.userIds).subscribe((response: any) => {
+            this.matchingProfiles = response.profiles;
+            this.isLoadingMatches = false;
+          });
+        });
         this.updateProfile();
         if(this.isAuth) {
           if (this.appAuthService.getAuthData().id === this.userId) {
@@ -108,6 +125,19 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
       this.bioText = this.profile.bio;
       this.bioBtnText = 'Show less'
     }
+  }
+
+
+  getPreviewText(profile: Profile) {
+    let profileText = '';
+    if(profile.genre) {
+      profileText += `${profile.genre}`;
+    }
+    if(profile.locationCountry) {
+      profileText += `, ${profile.locationCountry}`;
+    }
+
+    return profileText;
   }
 
 }

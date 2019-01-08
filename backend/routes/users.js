@@ -24,6 +24,9 @@ router.get('/user/:username', UserController.getUserByName);
 // Login
 router.get('/login', UserController.verifyFBToken, UserController.loginUser);
 
+
+
+
 // DELETE requests
 
 // Delete own user (and profile + releases)

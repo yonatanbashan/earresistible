@@ -1,7 +1,7 @@
 export interface Song {
 
   name: string;
-  length: number;
+  plays: number;
   filePath: string;
   id: string;
 

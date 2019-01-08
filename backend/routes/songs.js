@@ -13,6 +13,8 @@ const audioUpload = require('../middleware/audio-upload')
 // Add new song
 router.post('/add', checkAuth, audioUpload.single('song'), SongController.addSong);
 
+// Inc song plays
+router.put('/listen', SongController.incSongPlays)
 
 // GET requests
 router.get('/release', checkAuth, SongController.getReleaseSongs);

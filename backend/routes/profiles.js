@@ -9,9 +9,11 @@ const photoUpload = require("../middleware/photo-upload");
 
 // POST requests
 
-// Add new release
+// Add new profile
 router.post('/add', checkAuth, ProfileController.addProfile);
 
+// Get list of profiles
+router.post('/get', ProfileController.getProfiles);
 
 // Update profile
 router.put('/update', checkAuth, photoUpload.single('image'), ProfileController.updateProfile);

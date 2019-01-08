@@ -91,6 +91,10 @@ export class ReleaseService {
 
   }
 
+  incSongPlays(songId: string) {
+    return this.http.put(this.serverAddress + 'api/songs/listen/', { songId: songId });
+  }
+
   getReleaseSongs(releaseId: string) {
     const queryParams = `?releaseId=${releaseId}`;
     return this.http.get(this.serverAddress + 'api/songs/release/' + queryParams)

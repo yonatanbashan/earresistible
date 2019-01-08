@@ -13,6 +13,11 @@
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+.app-text-link {
+  color: rgb(152, 134, 218);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
 .app-text-white {
   color: white;
 }

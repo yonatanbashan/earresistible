@@ -19,12 +19,22 @@ exports.addSong = async (req, res, next) => {
 
   try {
     const song = await newSong.save();
-    res.status(201).json({ message: 'Song added successfully!', song: song});
+    res.status(201).json({ message: 'Song added successfully!', song: song });
   } catch (err) {
     res.status(500).json({ message: 'Failed to add song', error: err });
   }
 }
 
+exports.incSongPlays = async (req, res, next) => {
+  try {
+    let song = await Song.findById(req.body.songId);
+    const newSong = await Song.findByIdAndUpdate(req.body.songId, { plays: song.plays + 1 });
+    song.plays++;
+    res.status(201).json({ message: 'Song plays incremented successfully!', song: song });
+  } catch (err) {
+    res.status(500).json({ message: 'Failed to increment song plays', error: err });
+  }
+}
 
 exports.getReleaseSongs = async (req, res, next) => {
   try {

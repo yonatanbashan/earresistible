@@ -1,6 +1,7 @@
 const User = require('../models/user');
 const Profile = require('../models/profile');
 const Release = require('../models/release');
+const Tag = require('../models/tag');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const appConfig = require('../common/app-config');
@@ -181,6 +182,4 @@ exports.deleteUser = async (req, res, next) => {
   }
 
 }
-
-
 

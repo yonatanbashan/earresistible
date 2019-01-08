@@ -3,6 +3,8 @@ const Release = require('../models/release');
 const User = require('../models/user');
 const appConfig = require('../common/app-config');
 
+
+
 exports.getProfile = async (req, res, next) => {
   let profile;
   try {
@@ -24,8 +26,8 @@ exports.addProfile = async (req, res, next) => {
   const profile = new Profile(newProfile);
   profile.imagePath = appConfig.defaultPhoto;
   try {
-    const profile = await profile.save();
-    res.status(201).json({ message: 'Profile created successfully!', profile: profile });
+    const newProfile = await profile.save();
+    res.status(201).json({ message: 'Profile created successfully!', profile: newProfile });
   } catch (err) {
     res.status(500).json({ message: 'Failed to create profile', error: err });
   }
@@ -45,6 +47,17 @@ exports.updateProfile = async (req, res, next) => {
     res.status(200).json({ message: 'User profile updated successfully!' , profile: profile })
   } catch (err) {
     res.status(500).json({ message: 'Failed to update profile', error: err });
+  }
+
+}
+
+exports.getProfiles = async (req, res, next) => {
+
+  try {
+    const profiles = await Profile.find({ userId: { $in: req.body.userIds }});
+    res.status(200).json({ message: 'User profiles fetched successfully!' , profiles: profiles })
+  } catch (err) {
+    res.status(500).json({ message: 'Failed to fetch profiles', error: err });
   }
 
 }

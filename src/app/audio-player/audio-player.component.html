@@ -6,6 +6,9 @@
   <div (click)="playbackSkip($event)" style="height: 15px; background: #666666; cursor: pointer;" [ngStyle]="{ width: playerWidthString }">
     <div style="height: 15px; background: #8888CC;" [ngStyle]="{ width: progress }"></div>
   </div>
+  <span class="app-text-1 app-text-tiny px-2">
+    Plays: {{ song.plays }}
+  </span>
   <span class="app-text-1 app-text-smaller px-2" *ngIf="isPlaying">
       {{ currentTimeFormatted }}/{{ fullTimeFormatted }}
   </span>
