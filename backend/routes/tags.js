@@ -12,7 +12,7 @@ const TagController = require('../controllers/tags')
 router.get('/all', TagController.getTags);
 
 // Get top tags by userId
-router.get('/top', TagController.getTopTags);
+router.get('/usertop', TagController.getUserTopTags);
 
 // Search tags by regexp
 router.get('/search', TagController.searchTags);
@@ -20,10 +20,17 @@ router.get('/search', TagController.searchTags);
 // Get similar artists
 router.get('/similar', TagController.getSimilarArtists);
 
+// Get top tags
+router.get('/top', TagController.getTopTags);
+
+
 // POST requests
 
 // Add new tag/increment tag
 router.post('', TagController.incTag, TagController.addTag);
+
+// DELETE requests
+router.delete('', checkAuth, TagController.deleteTag);
 
 
 

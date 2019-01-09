@@ -42,8 +42,13 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
   bioBtnText: string = 'Show full bio';
   maxChar = 50;
 
+  partialMatchLoading: boolean = false;
+  noMoreMatchingArtists: boolean = false;
+  foundMatched = false;
+
   // For similar artists
-  tagNumToMatchArtists = 5;
+  tagNumToMatchArtists = 8;
+  initialMaxMatchedArtists = 3;
   maxMatchedArtists = 3;
 
   ngOnInit() {
@@ -55,18 +60,19 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
     });
 
     this.route.params.subscribe((params) => {
+      this.partialMatchLoading = false;
+      this.noMoreMatchingArtists = false;
+      this.maxMatchedArtists = this.initialMaxMatchedArtists;
       this.isLoadingMatches = true;
       this.username = params['username'];
       this.profService.getUserByUsername(this.username)
       .subscribe((response: any) => {
+        if(!response.user) {
+          this.router.navigate(['/not-found']);
+          return;
+        }
         this.userId = response.user._id;
-        this.tagService.getMatchingUsers(this.userId, this.tagNumToMatchArtists, this.maxMatchedArtists).subscribe((response: any) => {
-          this.matchingUsers = response.users;
-          this.tagService.getMatchingProfiles(response.userIds).subscribe((response: any) => {
-            this.matchingProfiles = response.profiles;
-            this.isLoadingMatches = false;
-          });
-        });
+        this.loadMatchingArtists();
         this.updateProfile();
         if(this.isAuth) {
           if (this.appAuthService.getAuthData().id === this.userId) {
@@ -83,6 +89,26 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.authStatusSubs.unsubscribe();
+  }
+
+  loadMatchingArtists() {
+    this.tagService.getMatchingUsers(this.userId, this.tagNumToMatchArtists, this.maxMatchedArtists).subscribe((response: any) => {
+      if(response.users.length < 1) {
+        this.foundMatched = false;
+      } else {
+        this.foundMatched = true;
+
+      }
+      this.matchingUsers = response.users;
+      this.tagService.getMatchingProfiles(response.userIds).subscribe((response: any) => {
+        if(this.partialMatchLoading && (response.profiles.length === this.matchingProfiles.length)) {
+          this.noMoreMatchingArtists = true;
+        }
+        this.matchingProfiles = response.profiles;
+        this.isLoadingMatches = false;
+        this.partialMatchLoading = false;
+      });
+    });
   }
 
   updateProfile() {
@@ -105,6 +131,12 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
 
   onNewRelease() {
     this.router.navigate(['/release-edit']);
+  }
+
+  onLoadMoreSimilarArtists() {
+    this.partialMatchLoading = true;
+    this.maxMatchedArtists += 2;
+    this.loadMatchingArtists();
   }
 
   onDeleteAccount() {

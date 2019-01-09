@@ -1,0 +1,33 @@
+<div class="row justify-content-center py-2">
+  <div class="col-12 text-center">
+    <span class="app-text-1 app-text-medium">Top tags / tag search:</span>
+  </div>
+</div>
+<div class="row justify-content-center py-2">
+  <div class="col-12">
+    <div class="row justify-content-center align-items-center">
+      <span *ngFor="let tag of tags">
+        <span
+          class="app-text-1 app-text-small px-3 app-tag-text"
+          [ngStyle]="{ 'font-size': getFontSize(tag) }">{{ tag.text }}</span>
+      </span>
+    </div>
+  </div>
+</div>
+
+<form [formGroup]="tagForm" class="px-3 py-2">
+    <div class="row py-2">
+      <div class="col-4 offset-4">
+        <div class="row justify-content-center">
+          <input
+            (input)="onInput($event)"
+            type="text"
+            name="tag"
+            class="form-control-sm"
+            placeholder="Search tags"
+            id="tag"
+            formControlName="tag">
+        </div>
+      </div>
+    </div>
+</form>

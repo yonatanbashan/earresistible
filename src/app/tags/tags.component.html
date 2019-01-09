@@ -3,7 +3,15 @@
 <div class="row justify-content-center py-2">
   <div class="col-12">
     <div class="row justify-content-center align-items-center">
-      <span *ngFor="let tag of tags">
+      <span
+      *ngFor="let tag of tags; let i = index"
+      [ngClass]="{'border border-danger': hoveredIndex === i}"
+      (mouseenter)="onEnterTag(i)"
+      (mouseleave)="onLeaveTag(i)">
+        <button
+          class="btn btn-danger btn-sm mx-1 app-text-1 app-text-tiny app-tiny-button"
+          *ngIf="hoveredIndex === i"
+          (click)="onDeleteTag(tag)">x</button>
         <span
           class="app-text-1 app-text-small px-3 app-tag-text"
           [ngStyle]="{ 'font-size': getFontSize(tag) }">{{ tag.text }}</span>

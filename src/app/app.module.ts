@@ -18,7 +18,6 @@ import { LoginPageComponent } from './auth/login-page/login-page.component';
 import { SocialLoginModule, AuthServiceConfig } from "angularx-social-login";
 import { FacebookLoginProvider } from "angularx-social-login";
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
-import { DashboardComponent } from './dashboard/dashboard.component';
 import { SignupPageComponent } from './auth/signup-page/signup-page.component';
 import { UpdateDetailsComponent } from './update-details/update-details.component';
 import { ProfileEditComponent } from './profile-edit/profile-edit.component';
@@ -38,6 +37,10 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component'
 import { NewlinePipe } from './newline.pipe';
 import { TagsComponent } from './tags/tags.component';
+import { ErrorPageComponent } from './error-page/error-page.component';
+import { HomeComponent } from './home/home.component';
+import { TopTagsComponent } from './top-tags/top-tags.component';
+import { TagViewComponent } from './tag-view/tag-view.component';
 
 
 let socialConfig = new AuthServiceConfig([
@@ -58,7 +61,6 @@ export function provideConfig() {
     ProfilePageComponent,
     NavbarComponent,
     LoginPageComponent,
-    DashboardComponent,
     SignupPageComponent,
     UpdateDetailsComponent,
     ProfileEditComponent,
@@ -69,7 +71,11 @@ export function provideConfig() {
     AddSongComponent,
     ConfirmDialogComponent,
     NewlinePipe,
-    TagsComponent
+    TagsComponent,
+    ErrorPageComponent,
+    HomeComponent,
+    TopTagsComponent,
+    TagViewComponent
   ],
   imports: [
     BrowserModule,

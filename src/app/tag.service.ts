@@ -30,16 +30,26 @@ export class TagService {
     .pipe(map(this.mapTags));
   }
 
-  getTopTags(userId: string, amount: number) {
+  getTopTags(amount: number) {
+    const queryParams = `?amount=${amount}`;
+    return this.http.get(this.serverAddress + 'api/tags/top/' + queryParams);
+  }
+
+  getUserTopTags(userId: string, amount: number) {
     const queryParams = `?userId=${userId}&amount=${amount}`;
-    return this.http.get(this.serverAddress + 'api/tags/top/' + queryParams)
+    return this.http.get(this.serverAddress + 'api/tags/usertop/' + queryParams)
     .pipe(map(this.mapTags));
   }
 
-  searchTags(userId: string, text: string, amount: number) {
+  searchUserTags(userId: string, text: string, amount: number) {
     const queryParams = `?userId=${userId}&text=${text}&amount=${amount}`;
     return this.http.get(this.serverAddress + 'api/tags/search/' + queryParams)
     .pipe(map(this.mapTags));
+  }
+
+  searchTags(text: string, amount: number) {
+    const queryParams = `?text=${text}&amount=${amount}`;
+    return this.http.get(this.serverAddress + 'api/tags/top/' + queryParams);
   }
 
   getMatchingUsers(userId: string, refTagsAmount: number, maxMatches: number) {
@@ -60,6 +70,11 @@ export class TagService {
       userId: userId
     };
     return this.http.post(this.serverAddress + 'api/tags/', request);
+  }
+
+  deleteTag(text: string) {
+    const queryParams = `?text=${text}`;
+    return this.http.delete(this.serverAddress + 'api/tags/' + queryParams);
   }
 
 

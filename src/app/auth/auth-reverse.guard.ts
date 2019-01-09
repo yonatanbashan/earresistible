@@ -24,7 +24,7 @@ export class AuthReverseGuard implements CanActivate {
     const token = this.appAuthService.getToken();
 
     if (token) {
-      this.router.navigate(['/dashboard']);
+      this.router.navigate(['/']);
     } else {
       isNotAuth = true;
     }

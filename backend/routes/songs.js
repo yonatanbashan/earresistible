@@ -17,7 +17,7 @@ router.post('/add', checkAuth, audioUpload.single('song'), SongController.addSon
 router.put('/listen', SongController.incSongPlays)
 
 // GET requests
-router.get('/release', checkAuth, SongController.getReleaseSongs);
+router.get('/release', SongController.getReleaseSongs);
 
 // DELETE requests
 router.delete('', checkAuth, SongController.deleteSong);

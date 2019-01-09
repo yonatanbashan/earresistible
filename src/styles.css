@@ -3,6 +3,7 @@
 
 @import url("./styles/images.css");
 @import url("./styles/text.css");
+@import url("./styles/tags.css");
 
 
 
@@ -29,6 +30,11 @@
   border: none;
   background: rgba(100, 100, 170, 1);
   color: #FFFFFF;
+}
+
+.app-tiny-button {
+  padding: 0 5px;
+  margin: 0 0;
 }
 
 .app-form-btn-icon {

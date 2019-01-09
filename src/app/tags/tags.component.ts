@@ -20,6 +20,7 @@ export class TagsComponent implements OnInit, OnDestroy, OnChanges {
   tags: Tag[];
   suggestedTags: Tag[] = [];
   @Input() userId: string;
+  @Input() isMe: boolean = false;
   tagForm: FormGroup;
   maxTagCount: number;
 
@@ -27,11 +28,12 @@ export class TagsComponent implements OnInit, OnDestroy, OnChanges {
   largestSearchTag: number;
   largestTagSize = 2.5;
 
-  tagAmount = 8;
-  suggestedTagAmount = 5;
+  tagAmount = 10;
+  suggestedTagAmount = 4;
   isLoadingTags = true;
 
-
+  hovered = false;
+  hoveredIndex = -1;
 
   submitInvalid = false;
   searchSubscription: Subscription;
@@ -62,7 +64,7 @@ export class TagsComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   getTags() {
-    this.tagService.getTopTags(this.userId, this.tagAmount).subscribe(tags => {
+    this.tagService.getUserTopTags(this.userId, this.tagAmount).subscribe(tags => {
       tags = tags.sort((a,b) => {
         if (a.text > b.text) {
           return 1;
@@ -92,13 +94,13 @@ export class TagsComponent implements OnInit, OnDestroy, OnChanges {
     this.suggestedTags = [];
   }
 
-  onInput(e: Event) {
+  onInput() {
     const text = this.tagForm.value.tag;
     if (text !== '') {
       if (this.searchSubscription) {
         this.searchSubscription.unsubscribe();
       }
-      this.searchSubscription = this.tagService.searchTags(this.userId, text, this.suggestedTagAmount).subscribe(tags => {
+      this.searchSubscription = this.tagService.searchUserTags(this.userId, text, this.suggestedTagAmount).subscribe(tags => {
         tags = tags.sort((a,b) => {
           if (a.text > b.text) {
             return 1;
@@ -121,5 +123,22 @@ export class TagsComponent implements OnInit, OnDestroy, OnChanges {
     this.onSubmit();
   }
 
+  onEnterTag(i: number) {
+    if (this.isMe) {
+      this.hovered = true;
+      this.hoveredIndex = i;
+    }
+  }
+
+  onLeaveTag(i: number) {
+    this.hovered = false;
+    this.hoveredIndex = -1;
+  }
+
+  onDeleteTag(tag: Tag) {
+    this.tagService.deleteTag(tag.text).subscribe(response => {
+      this.getTags();
+    });
+  }
 
 }

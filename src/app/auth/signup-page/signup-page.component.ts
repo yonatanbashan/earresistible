@@ -30,11 +30,13 @@ export class SignupPageComponent implements OnInit, OnDestroy {
       'repeatPassword': new FormControl(null, Validators.required),
     });
 
-    this.appAuthService.getAuthDataListener().subscribe(status => {
-      if (status) {
-        this.router.navigate(['/details']);
-      }
-    });
+    // TODO: What is this??
+
+    // this.appAuthService.getAuthDataListener().subscribe(status => {
+    //   if (status) {
+    //     this.router.navigate(['/details']);
+    //   }
+    // });
 
   }
 

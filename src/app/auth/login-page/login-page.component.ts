@@ -37,7 +37,7 @@ export class LoginPageComponent implements OnInit, OnDestroy {
       this.isLoading = false;
       if (status) {
         this.authFailed = false;
-        this.router.navigate(['/dashboard']);
+        this.router.navigate(['/']);
       } else {
         this.authFailed = true;
       }

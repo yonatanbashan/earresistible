@@ -4,6 +4,54 @@ const Profile = require('../models/profile');
 const appConfig = require('../common/app-config');
 const aux = require('../common/auxiliary')
 
+exports.getTopTags = async (req, res, next) => {
+
+  let tagCountArr = [];
+  let tags = [];
+  try {
+    // Get all tags
+    if(req.query.text) {
+      const text = req.query.text.toLowerCase();
+      tags = await Tag.find( {text: { $regex:  `${text}` } }); // Searching regex
+    } else {
+      tags = await Tag.find({});
+    }
+  } catch (err) {
+      res.status(500).json({message: 'Failed to fetch top tags', error: err})
+  }
+
+  // Get top tags
+  tags.forEach(tag => {
+    const i = tagCountArr.findIndex(o => o.text === tag.text);
+    if(i === -1) {
+      tagCountArr.push({
+        text: tag.text,
+        count: 1
+      });
+    } else {
+      let t = tagCountArr[i];
+      t.count += 1;
+      tagCountArr[i] = t;
+    }
+  });
+
+  // Sort and cut only top
+  tagCountArr.sort((a,b) => {
+    return b.count - a.count;
+  });
+  tagCountArr = tagCountArr.slice(0, req.query.amount);
+
+  // Return sorted by name
+  tagCountArr.sort((a,b) => {
+    if (a.text > b.text) {
+      return 1;
+    } else {
+      return -1;
+    }
+  });
+
+  res.status(200).json({message: 'Successfully fetched top tags!', tags: tagCountArr});
+}
 
 exports.searchTags = async (req, res, next) => {
 
@@ -54,7 +102,7 @@ exports.searchTags = async (req, res, next) => {
 
 }
 
-exports.getTopTags = async (req, res, next) => {
+exports.getUserTopTags = async (req, res, next) => {
   try {
     let topTags = await Tag.find({ userId: req.query.userId });
     topTags.sort((a,b) => {
@@ -139,6 +187,19 @@ exports.addTag = async (req, res, next) => {
 
 }
 
+exports.deleteTag = async (req, res, next) => {
+
+  const text = req.query.text;
+
+  try {
+    const deletedTag = await Tag.deleteOne({ userId: req.userData.userId, text: text });
+    res.status(200).json({ message: 'Tag deleted successfully!', tag: deletedTag });
+  } catch (err) {
+    res.status(500).json({ message: 'Failed to delete tag', error: err });
+  }
+
+}
+
 
 exports.getSimilarArtists = async (req, res, next) => {
 
@@ -150,7 +211,7 @@ exports.getSimilarArtists = async (req, res, next) => {
   let userScorePairs = [];
   let finalMatchedUserIds = [];
 
-  // try {
+  try {
 
     // Get the reference user's top tags
     let refTags = await Tag.find({ userId: req.query.userId });
@@ -178,16 +239,19 @@ exports.getSimilarArtists = async (req, res, next) => {
     matchingUserIds.forEach(matchingUserId => {
       const thisUserTags = userTags.filter(tag => ('' + tag.userId) === matchingUserId);
       const score = aux.getMatchingScore(refTags, thisUserTags);
-      userScorePairs.push({
-        userId: matchingUserId,
-        score: score
-      });
+      if (score >= refTagsAmount / 100) { // Skip loose matches
+        userScorePairs.push({
+          userId: matchingUserId,
+          score: score
+        });
+      }
     });
 
     // Sort matches by score
     userScorePairs.sort((a,b) => {
       return b.score - a.score;
     });
+
 
     // Get only small number of matches
     if(userScorePairs.length > maxMatches) {
@@ -201,16 +265,31 @@ exports.getSimilarArtists = async (req, res, next) => {
     if(finalMatchedUserIds.length < maxMatches) {
 
       numMissingProfiles = maxMatches - finalMatchedUserIds.length;
+      console.log('numMissingProfiles', numMissingProfiles)
+
 
       let moreUserIds = [];
       let onlyUserIds = [];
       const refUserProfile = await Profile.findOne({ userId: req.query.userId });
-      const similarGenreProfiles = await Profile.find( { genre: refUserProfile.genre });
-      similarGenreProfiles.forEach(profile => {
+
+      // Try genre-subGenre pairs matching
+      const similarSubGenreProfiles = await Profile.find( { genre: refUserProfile.genre, subGenre: refUserProfile.subGenre });
+      similarSubGenreProfiles.forEach(profile => {
         moreUserIds.push(profile.userId);
       });
 
+      // Try only genre, if still missing
+      if(moreUserIds.length < numMissingProfiles) {
+        const similarGenreProfiles = await Profile.find( { genre: refUserProfile.genre });
+        similarGenreProfiles.forEach(profile => {
+          if(!moreUserIds.includes('' + profile.userId)) {
+            moreUserIds.push(profile.userId);
+          }
+        });
+      }
+
       moreUserIds = moreUserIds.filter(id => '' + id !== req.query.userId);
+      moreUserIds = moreUserIds.filter(id => !finalMatchedUserIds.includes('' + id));
 
       if(moreUserIds.length >= numMissingProfiles) {
         let chosenIndices = [];
@@ -218,7 +297,7 @@ exports.getSimilarArtists = async (req, res, next) => {
           let randomIndex;
           while( chosenIndices.includes(randomIndex = Math.floor(Math.random() * moreUserIds.length)) ) {
           }
-          onlyUserIds.push(moreUserIds[randomIndex]);
+          onlyUserIds.push('' + moreUserIds[randomIndex]);
           chosenIndices.push(randomIndex);
         }
       } else {
@@ -229,17 +308,27 @@ exports.getSimilarArtists = async (req, res, next) => {
 
     }
 
-
     const finalMatchedUsers = await User.find({_id: { $in: finalMatchedUserIds }});
+
+    let finalMatchedUsersSortedByScore = [];
+
+    finalMatchedUserIds.forEach(id => {
+      let users = finalMatchedUsers.filter(user => {
+       return ('' + user._id) == id
+      });
+      if(users.length > 0) {
+        finalMatchedUsersSortedByScore.push(users[0]);
+      }
+    });
 
     res.status(200).json({
       message: 'Successfully found matching users!',
-      users: finalMatchedUsers,
+      users: finalMatchedUsersSortedByScore,
       userIds: finalMatchedUserIds
     });
 
-  // } catch (err) {
-  //   res.status(500).json({ message: 'Could not get similar artists!', error: err })
-  // }
+  } catch (err) {
+    res.status(500).json({ message: 'Could not get similar artists!', error: err })
+  }
 
 }

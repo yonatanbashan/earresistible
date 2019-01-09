@@ -48,7 +48,8 @@ exports.getMatchingScore = function(refTags, targetTags) {
   refTags.forEach(tag => {
     existingTag = targetTags.filter(ttag => tag.text === ttag.text);
     if (existingTag.length > 0) {
-      score += (existingTag[0].count / maxTargetTag) / (tag.count / maxRefTag);
+      const addScore = (existingTag[0].count / maxTargetTag) * (tag.count / maxRefTag) * (tag.count / maxRefTag);
+      score += addScore;
     }
   });
   return score;

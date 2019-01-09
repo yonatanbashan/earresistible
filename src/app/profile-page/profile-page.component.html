@@ -1,4 +1,4 @@
-<div class="container" *ngIf="!isLoadingProfile && !isLoadingMatches && !isLoadingReleases" >
+<div class="container" *ngIf="!isLoadingProfile && !isLoadingMatches && !isLoadingReleases || partialMatchLoading" >
   <div class="row my-5">
     <div class="col-12 shadow-lg app-card">
 
@@ -61,11 +61,12 @@
     <div class="col-10 offset-1 shadow-lg app-card">
       <span *ngIf="userId">
         <app-tags
+        [isMe]="isMe"
         [userId]="userId"></app-tags>
       </span>
     </div>
   </div>
-  <div class="row my-5" *ngIf="matchingProfiles.length > 0">
+  <div class="row my-5" *ngIf="matchingProfiles.length > 0 && foundMatched">
     <div class="col-10 offset-1 shadow-lg app-card">
       <div class="row justify-content-center">
           <span class="app-text-1 app-text-medium">Similar artists:</span>
@@ -98,6 +99,14 @@
           </div>
         </div>
       </span>
+      <div class="row justify-content-center" *ngIf="!partialMatchLoading && !noMoreMatchingArtists">
+        <button
+        class="btn btn-primary mx-3 my-2 app-text-1 app-form-btn-text"
+        (click)="onLoadMoreSimilarArtists()"
+        >
+        Show more...
+        </button>
+      </div>
     </div>
   </div>
   <div class="row my-3" *ngFor="let release of profile.releases">

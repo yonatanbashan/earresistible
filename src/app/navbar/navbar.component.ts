@@ -1,5 +1,6 @@
 import { AppAuthService } from './../auth/app-auth.service';
 import { Component, OnInit } from '@angular/core';
+import { faHeadphones } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-navbar',
@@ -9,9 +10,10 @@ import { Component, OnInit } from '@angular/core';
 export class NavbarComponent implements OnInit {
 
   isAuth = false;
+  faHeadphones = faHeadphones;
 
   constructor(
-    private appAuthService: AppAuthService
+    private appAuthService: AppAuthService,
   ) { }
 
   ngOnInit() {

@@ -175,6 +175,7 @@ exports.deleteUser = async (req, res, next) => {
     }
     const deletedProfile = await Profile.deleteOne({ userId: req.userData.userId });
     const deletedReleases = await Release.deleteMany({ _id: { $in: releases }});
+    const deletedTags = await Tag.deleteMany({ userId: req.userData.userId })
     const user = await User.deleteOne({_id: req.userData.userId });
     res.status(200).json({ message: 'User deleted successfully!' });
   } catch (err) {

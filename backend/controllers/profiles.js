@@ -51,11 +51,26 @@ exports.updateProfile = async (req, res, next) => {
 
 }
 
+// Returns profiles by list of IDs, AND KEEPS THE ORDER
 exports.getProfiles = async (req, res, next) => {
 
+  const userIds = req.body.userIds;
+
   try {
-    const profiles = await Profile.find({ userId: { $in: req.body.userIds }});
-    res.status(200).json({ message: 'User profiles fetched successfully!' , profiles: profiles })
+    const profilesUnordered = await Profile.find({ userId: { $in: userIds }});
+
+    let profilesOrdered = [];
+
+    userIds.forEach(id => {
+      let profiles = profilesUnordered.filter(profile => {
+       return ('' + profile.userId) == id
+      });
+      if(profiles.length > 0) {
+        profilesOrdered.push(profiles[0]);
+      }
+    });
+
+    res.status(200).json({ message: 'User profiles fetched successfully!' , profiles: profilesOrdered })
   } catch (err) {
     res.status(500).json({ message: 'Failed to fetch profiles', error: err });
   }
