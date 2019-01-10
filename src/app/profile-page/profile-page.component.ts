@@ -9,6 +9,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { ReleaseService } from '../release.service';
 import { shortText } from '../common/short-text';
 import { TagService } from '../tag.service';
+import { partition } from 'rxjs/operators';
 
 @Component({
   selector: 'app-profile-page',
@@ -136,7 +137,12 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
   onLoadMoreSimilarArtists() {
     this.partialMatchLoading = true;
     this.maxMatchedArtists += 2;
-    this.loadMatchingArtists();
+    if(this.maxMatchedArtists > 15) {
+      this.noMoreMatchingArtists = true;
+      this.partialMatchLoading = false;
+    } else {
+      this.loadMatchingArtists();
+    }
   }
 
   onDeleteAccount() {

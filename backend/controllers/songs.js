@@ -1,5 +1,7 @@
 const Song = require('../models/song');
 const Release = require('../models/release');
+const Profile = require('../models/profile');
+const User = require('../models/user');
 const appConfig = require('../common/app-config');
 const aux = require('../common/auxiliary')
 const deleteFile = require('../common/delete-file')
@@ -29,6 +31,12 @@ exports.incSongPlays = async (req, res, next) => {
   try {
     let song = await Song.findById(req.body.songId);
     const newSong = await Song.findByIdAndUpdate(req.body.songId, { plays: song.plays + 1 });
+
+    const profile = await Profile.findOne({userId: song.userId});
+    const newProfile = await Profile.findOneAndUpdate({userId: song.userId}, { plays: profile.plays + 1});
+
+    const release = await Release.findOne({_id: song.releaseId});
+    const newRelease = await Release.findOneAndUpdate({_id: song.releaseId}, { plays: release.plays + 1});
     song.plays++;
     res.status(201).json({ message: 'Song plays incremented successfully!', song: song });
   } catch (err) {

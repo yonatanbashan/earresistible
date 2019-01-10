@@ -41,6 +41,7 @@ import { ErrorPageComponent } from './error-page/error-page.component';
 import { HomeComponent } from './home/home.component';
 import { TopTagsComponent } from './top-tags/top-tags.component';
 import { TagViewComponent } from './tag-view/tag-view.component';
+import { ProfileListComponent } from './profile-list/profile-list.component';
 
 
 let socialConfig = new AuthServiceConfig([
@@ -75,7 +76,8 @@ export function provideConfig() {
     ErrorPageComponent,
     HomeComponent,
     TopTagsComponent,
-    TagViewComponent
+    TagViewComponent,
+    ProfileListComponent
   ],
   imports: [
     BrowserModule,

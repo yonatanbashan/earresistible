@@ -11,6 +11,7 @@ const profileSchema = mongoose.Schema({
   locationCountry: { type: String, default: ''},
   genre: { type: String, default: ''},
   subGenre: { type: String, default: ''},
+  plays: {type: Number, default: 0 },
   userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", unique: true },
 });
 

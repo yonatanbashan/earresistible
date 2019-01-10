@@ -6,6 +6,7 @@ const releaseSchema = mongoose.Schema({
   imagePath: { type: String, required: true},
   releaseDate: { type: Date, default: Date.now},
   published: { type: Boolean, default: false },
+  plays: {type: Number, default: 0 },
   userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
 });
 
