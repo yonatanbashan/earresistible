@@ -4,6 +4,35 @@ const Profile = require('../models/profile');
 const appConfig = require('../common/app-config');
 const aux = require('../common/auxiliary')
 
+exports.getArtistsByTag = async (req, res, next) => {
+
+  const text = req.query.text.toLowerCase();
+
+  let tags = await Tag.find({ text: text });
+  // Sort and cut only top
+  tags.sort((a,b) => {
+    return b.count - a.count;
+  });
+
+  tags = tags.slice(0, req.query.amount);
+
+  let userIds = [];
+  tags.forEach(tag => {
+    userIds.push(tag.userId);
+  })
+
+  const users = await User.find({ _id: { $in: userIds } });
+  const profiles = await Profile.find({ userId: { $in: userIds } });
+
+  res.status(200).json({
+    message: 'Successfully fetched top users for tag!',
+    users: users,
+    profiles: profiles
+  });
+
+
+}
+
 exports.getTopTags = async (req, res, next) => {
 
   let tagCountArr = [];

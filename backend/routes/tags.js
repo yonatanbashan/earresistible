@@ -23,6 +23,9 @@ router.get('/similar', TagController.getSimilarArtists);
 // Get top tags
 router.get('/top', TagController.getTopTags);
 
+// Get top artists by tag
+router.get('/artists', TagController.getArtistsByTag);
+
 
 // POST requests
 

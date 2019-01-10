@@ -1,3 +1,18 @@
-<p>
-  tag-view works!
-</p>
+<div class="container">
+  <div class="row my-5 justify-content-center">
+    <div class="col-12 shadow-lg app-card">
+      <div class="app-text-1 app-text-medium text-center my-3">
+        Showing top artists for tag: <span class="app-tag-title">{{ tagName }}</span>
+      </div>
+      <app-profile-list [users]="users" [profiles]="profiles"></app-profile-list>
+      <div class="my-3" *ngIf="!isLoading && !noMoreArtists">
+        <button class="btn btn-primary mx-3 my-2 app-text-1 app-form-btn-text" (click)="onLoadMore()">Show more...</button>
+      </div>
+      <span *ngIf="isLoading">
+        <app-spinner></app-spinner>
+      </span>
+    </div>
+  </div>
+</div>
+
+

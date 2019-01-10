@@ -25,7 +25,7 @@ export class TopTagsComponent implements OnInit, OnDestroy, OnChanges {
   largestTag: number;
   largestTagSize = 2.5;
 
-  tagAmount = 10;
+  tagAmount = 25;
   isLoadingTags: boolean = false;
 
   searchSubscription: Subscription;

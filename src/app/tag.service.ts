@@ -24,6 +24,11 @@ export class TagService {
     });
   }
 
+  getArtistsByTag(text: string, amount: number) {
+    const queryParams = `?text=${text}&amount=${amount}`;
+    return this.http.get(this.serverAddress + 'api/tags/artists/' + queryParams);
+  }
+
   getTags(userId: string) {
     const queryParams = `?userId=${userId}`;
     return this.http.get(this.serverAddress + 'api/tags/all/' + queryParams)

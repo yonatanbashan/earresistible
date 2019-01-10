@@ -9,7 +9,8 @@
       <span *ngFor="let tag of tags">
         <span
           class="app-text-1 app-text-small px-3 app-tag-text"
-          [ngStyle]="{ 'font-size': getFontSize(tag) }">{{ tag.text }}</span>
+          [ngStyle]="{ 'font-size': getFontSize(tag) }"
+          [routerLink]="['/tag', tag.text]">{{ tag.text }}</span>
       </span>
     </div>
   </div>
