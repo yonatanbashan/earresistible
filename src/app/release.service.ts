@@ -29,6 +29,7 @@ export class ReleaseService {
         items: release.items,
         userId: release.userId,
         published: release.published,
+        plays: release.plays,
         id: release._id
       };
     });

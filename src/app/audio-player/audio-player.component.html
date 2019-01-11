@@ -1,15 +1,22 @@
 <div class="row align-items-center">
+  <div class="col-2 mx-0 px-0">
   <button class="btn btn-primary btn-sm app-form-btn-text app-text-smaller mx-2" (click)="toggleAudio()">
     <fa-icon *ngIf="!isPlaying || isPaused" [icon]="faPlay" class="app-form-btn-icon mx-1 py-0 my-0" style="font-size: 70%;"></fa-icon>
     <fa-icon *ngIf="isPlaying && !isPaused" [icon]="faPause" class="app-form-btn-icon mx-1 py-0 my-0" style="font-size: 70%;"></fa-icon>
   </button>
-  <div (click)="playbackSkip($event)" style="height: 15px; background: #666666; cursor: pointer;" [ngStyle]="{ width: playerWidthString }">
-    <div style="height: 15px; background: #8888CC;" [ngStyle]="{ width: progress }"></div>
   </div>
-  <span class="app-text-1 app-text-tiny px-2">
-    Plays: {{ song.plays }}
-  </span>
-  <span class="app-text-1 app-text-smaller px-2" *ngIf="isPlaying">
-      {{ currentTimeFormatted }}/{{ fullTimeFormatted }}
-  </span>
+  <div class="col-7 mx-0 px-0">
+    <div (click)="playbackSkip($event)" style="height: 15px; background: #666666; cursor: pointer;" [ngStyle]="{ width: playerWidthString }">
+    <!-- <div (click)="playbackSkip($event)" style="height: 15px; background: #666666; cursor: pointer; width: 100%" class="px-0 mx-0"> -->
+      <div style="height: 15px; background: #8888CC;" [ngStyle]="{ width: progress }"></div>
+    </div>
+  </div>
+  <div class="col-3 mx-0 px-0">
+    <span class="app-text-1 app-text-tiny px-2">
+      Plays: {{ song.plays }}
+    </span>
+    <span class="app-text-1 app-text-smaller px-2" *ngIf="isPlaying">
+        {{ currentTimeFormatted }}/{{ fullTimeFormatted }}
+    </span>
+  </div>
 </div>

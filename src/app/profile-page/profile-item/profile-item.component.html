@@ -1,5 +1,5 @@
 <div class="row align-items-center">
-  <div class="col-3">
+  <div class="col-4 col-sm-3">
     <div class="row justify-content-center py-4 px-3">
       <div class="release-image-cropper app-item-shadow-large">
         <img [src]="release.imagePath" class="release-image my-0 mx-0" [title]="release.name">
@@ -15,6 +15,9 @@
     </div>
     <div class="app-text-1 app-text-small">
       {{ release.releaseDate }}
+    </div>
+    <div class="app-text-1 app-text-smaller">
+        {{ release.plays }} plays
     </div>
     <button
     *ngIf="isMe"

@@ -6,7 +6,9 @@
       </div>
       <app-profile-list [users]="users" [profiles]="profiles"></app-profile-list>
       <div class="my-3" *ngIf="!isLoading && !noMoreArtists">
-        <button class="btn btn-primary mx-3 my-2 app-text-1 app-form-btn-text" (click)="onLoadMore()">Show more...</button>
+        <button
+        class="btn btn-primary mx-3 my-2 app-text-1 app-form-btn-text"
+        (click)="onLoadMore()">Show more...</button>
       </div>
       <span *ngIf="isLoading">
         <app-spinner></app-spinner>

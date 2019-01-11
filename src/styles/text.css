@@ -26,23 +26,141 @@
   color: #DD4466;
 }
 
-/* Sizes */
+
+
+/* Button text */
+
+
+.app-form-btn-text {
+  font-weight: 450;
+  border: none;
+  background: rgba(100, 100, 170, 1);
+  color: #FFFFFF;
+}
+@media screen and (min-width: 576px) and (max-width: 768px) {
+  .app-form-btn-text {
+    font-size: 85%;
+    font-weight: 400;
+  }
+}
+@media screen and (max-width: 576px) {
+  .app-form-btn-text {
+    font-size: 70%;
+    font-weight: 300;
+  }
+}
+
+.app-form-btn-small-text {
+  font-weight: 450;
+  font-size: 85%;
+  border: none;
+  background: rgba(100, 100, 170, 1);
+  color: #FFFFFF;
+}
+@media screen and (min-width: 576px) and (max-width: 768px) {
+  .app-form-btn-small-text {
+    font-size: 70%;
+    font-weight: 400;
+  }
+}
+@media screen and (max-width: 576px) {
+  .app-form-btn-small-text {
+    font-size: 60%;
+    font-weight: 300;
+  }
+}
+
+
+
+.app-form-btn-text:disabled {
+  background: rgba(100, 100, 170, 0.8);
+  box-shadow: none;
+}
+
+.app-form-btn-text:hover:enabled {
+  background: rgba(120, 120, 200, 1);
+}
+
+
+
+
+/* Text sizes */
+
 .app-text-large {
   font-size: 2rem;
 }
+@media screen and (min-width: 576px) and (max-width: 768px) {
+  .app-text-large {
+    font-size: 1.5rem;
+  }
+}
+@media screen and (max-width: 576px) {
+  .app-text-large {
+    font-size: 1.2rem;
+  }
+}
+
+
 
 .app-text-medium {
   font-size: 1.5rem;
 }
+@media screen and (min-width: 576px) and (max-width: 768px) {
+  .app-text-medium {
+    font-size: 1.2rem;
+  }
+}
+@media screen and (max-width: 576px) {
+  .app-text-medium {
+    font-size: 1rem;
+  }
+}
+
+
 
 .app-text-small {
   font-size: 1rem;
 }
+@media screen and (min-width: 576px) and (max-width: 768px) {
+  .app-text-small {
+    font-size: 0.8rem;
+  }
+}
+@media screen and (max-width: 576px) {
+  .app-text-small {
+    font-size: 0.7rem;
+  }
+}
+
+
 
 .app-text-smaller {
   font-size: 0.9rem;
 }
+@media screen and (min-width: 576px) and (max-width: 768px) {
+  .app-text-smaller {
+    font-size: 0.8rem;
+  }
+}
+@media screen and (max-width: 576px) {
+  .app-text-smaller {
+    font-size: 0.7rem;
+  }
+}
+
+
 
 .app-text-tiny {
   font-size: 0.8rem;
 }
+@media screen and (min-width: 576px) and (max-width: 768px) {
+  .app-text-tiny {
+    font-size: 0.7rem;
+  }
+}
+@media screen and (max-width: 576px) {
+  .app-text-tiny {
+    font-size: 0.6rem;
+  }
+}
+

@@ -5,6 +5,7 @@
     <div class="row justify-content-center align-items-center">
       <span
       *ngFor="let tag of tags; let i = index"
+      class="app-tag-parent-size"
       [ngClass]="{'border border-danger': hoveredIndex === i}"
       (mouseenter)="onEnterTag(i)"
       (mouseleave)="onLeaveTag(i)">

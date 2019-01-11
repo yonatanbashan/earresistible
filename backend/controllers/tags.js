@@ -19,15 +19,25 @@ exports.getArtistsByTag = async (req, res, next) => {
   let userIds = [];
   tags.forEach(tag => {
     userIds.push(tag.userId);
-  })
+  });
 
   const users = await User.find({ _id: { $in: userIds } });
   const profiles = await Profile.find({ userId: { $in: userIds } });
 
+  let sortedUsers = [];
+  let sortedProfiles = [];
+  console.log(users);
+  userIds.forEach(userId => {
+    const userIndex = users.filter(user => ('' + user._id) === ('' + userId));
+    const profileIndex = profiles.filter(profile => ('' + profile.userId) === ('' + userId));
+    sortedUsers.push(userIndex[0]);
+    sortedProfiles.push(profileIndex[0]);
+  });
+
   res.status(200).json({
     message: 'Successfully fetched top users for tag!',
-    users: users,
-    profiles: profiles
+    users: sortedUsers,
+    profiles: sortedProfiles
   });
 
 

@@ -1,6 +1,6 @@
 <span *ngFor="let profile of profiles; let i = index">
 <div class="row justify-content-center">
-    <div class="col-2">
+    <div class="col-4 col-md-3 col-lg-2">
       <div class="preview-image-cropper app-item-shadow-large">
           <img
             [routerLink]="['/profile', users[i].username]"
@@ -10,7 +10,7 @@
             [title]="profile.artistName">
       </div>
     </div>
-    <div class="col-10 py-2">
+    <div class="col-8 col-md-9 col-lg-10 py-2 px-5 px-sm-2">
       <div class="row">
           <span
             class="app-text-link app-text-small"
@@ -20,6 +20,9 @@
       </div>
       <div class="row">
           <span class="app-text-1 app-text-small">{{ getPreviewText(profile) }}</span>
+      </div>
+      <div class="row">
+          <span class="app-text-1 app-text-smaller">{{ profile.plays }} plays</span>
       </div>
       <div class="row justify-content-center">
       </div>

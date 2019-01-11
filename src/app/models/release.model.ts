@@ -9,6 +9,7 @@ export interface Release {
   releaseDate: Date;
   items: Song[];
   userId: string;
+  plays: number;
   id: string;
 
 }

@@ -3,14 +3,18 @@
     <div class="col-12 shadow-lg app-card">
 
       <div class="row align-items-center" *ngIf="!isLoadingProfile">
-        <div class="col-4">
+        <div class="col-5 col-md-4">
           <div class="row justify-content-center py-2">
             <div class="profile-image-cropper app-item-shadow-large">
-              <img [src]="profile.imagePath" class="profile-image my-2 mx-2" [title]="profile.artistName">
+              <img
+              [src]="profile.imagePath"
+              class="profile-image my-2 mx-2"
+              [title]="profile.artistName"
+              #profileImage>
             </div>
           </div>
         </div>
-        <div class="col-8">
+        <div class="col-7 col-md-8 px-2 px-md-4 px-lg-5">
           <div class="row">
             <div class="col-9">
             <div class="app-text-1 app-text-large">
@@ -19,8 +23,8 @@
             <div class="app-text-1 app-text-medium" *ngIf="profile.description !== null">
               {{ profile.description }}
             </div>
-            <div class="app-text-1 app-text-small" *ngIf="profile.genre !== '' && profile.genre !== null" [title]="profile.subGenre">
-              {{ profile.genre }}
+            <div class="app-text-1 app-text-small" *ngIf="profile.genre !== '' && profile.genre !== null">
+              {{ profile.genre }}<span class="app-text-smaller" *ngIf="profile.subGenre !== '' && profile.subGenre !== null"> - {{ profile.subGenre }}</span>
             </div>
             <div class="app-text-1 app-text-small" *ngIf="profile.locationCity !== '' && profile.locationCountry !== ''">
               {{ profile.locationCity }}, {{ profile.locationCountry }}
@@ -37,26 +41,29 @@
               class="btn btn-primary app-text-1 app-form-btn-text"
               (click)="toggleBio()">{{ bioBtnText }}</button>
             </div>
-            <div class="col-3" *ngIf="isMe">
-              <div class="row justify-content-end">
-              <button
-                class="btn btn-primary mx-3 my-2 app-text-1 app-form-btn-text"
-                (click)="onEditProfile()">Edit</button>
-              </div>
-              <div class="row justify-content-end">
-              <button
-                class="btn btn-primary mx-3 my-2 app-text-1 app-form-btn-text"
-                (click)="onNewRelease()">Add release</button>
-              <button
-                class="btn btn-primary mx-3 my-2 app-text-1 app-form-btn-text"
-                (click)="onDeleteAccount()">Delete account</button>
-              </div>
-            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row justify-content-center">
+        <div class="" *ngIf="isMe">
+          <div class="row">
+            <button
+              class="btn btn-primary mx-2 my-2 app-text-1 app-form-btn-small-text"
+              (click)="onEditProfile()">Edit</button>
+
+            <button
+              class="btn btn-primary mx-2 my-2 app-text-1 app-form-btn-small-text"
+              (click)="onNewRelease()">Add release</button>
+
+            <button
+              class="btn btn-primary mx-2 my-2 app-text-1 app-form-btn-small-text"
+              (click)="onDeleteAccount()">Delete account</button>
           </div>
         </div>
       </div>
     </div>
   </div>
+
   <div class="row my-5">
     <div class="col-10 offset-1 shadow-lg app-card">
       <span *ngIf="userId">

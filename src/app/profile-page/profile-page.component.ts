@@ -4,7 +4,7 @@ import { AppAuthService } from './../auth/app-auth.service';
 import { ProfileService } from './../profile.service';
 import { Profile } from './../models/profile.model';
 import { AuthData } from './../models/auth-data.model';
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ElementRef, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ReleaseService } from '../release.service';
 import { shortText } from '../common/short-text';
@@ -51,6 +51,9 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
   tagNumToMatchArtists = 8;
   initialMaxMatchedArtists = 3;
   maxMatchedArtists = 3;
+
+  @ViewChild('profileImage') profileImage: ElementRef;
+
 
   ngOnInit() {
 

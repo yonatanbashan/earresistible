@@ -1,4 +1,4 @@
-<div class="d-flex container py-5 justify-content-center align-items-center">
+<div class="d-flex container-fluid py-5 justify-content-center align-items-center">
   <div class="col-9 shadow app-card" *ngIf="isLoading || isUpdating">
     <app-spinner></app-spinner>
     <div class="row">
@@ -8,7 +8,7 @@
     </div>
   </div>
 
-  <div class="col-9 shadow app-card" *ngIf="!isLoading && !isUpdating">
+  <div class="col-12 col-sm-11 col-md-9 col-lg-7 col-xl-6 shadow app-card" *ngIf="!isLoading && !isUpdating">
 
     <div class="row justify-content-center">
       <div class="col-12 py-3">

@@ -48,10 +48,12 @@ export class TopTagsComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   getFontSize(tag: Tag) {
-    const relativeSize = tag.count / this.largestTag;
-    let realSize = this.largestTagSize * relativeSize;
-    realSize =  realSize < 1 ? 1 : realSize;
-    return `${realSize}rem`;
+    let relativeSize = tag.count / this.largestTag;
+    if (relativeSize < 0.4) {
+      relativeSize = 0.33;
+    }
+    let percent = relativeSize * 100;
+    return `${percent}%`;
   }
 
   getTags(text: string = undefined) {

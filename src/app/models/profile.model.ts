@@ -11,6 +11,7 @@ export interface Profile {
   locationCountry: string;
   genre: string;
   subGenre: string;
+  plays: number;
   releases: Release[];
 
 }
