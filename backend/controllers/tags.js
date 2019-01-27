@@ -26,7 +26,6 @@ exports.getArtistsByTag = async (req, res, next) => {
 
   let sortedUsers = [];
   let sortedProfiles = [];
-  console.log(users);
   userIds.forEach(userId => {
     const userIndex = users.filter(user => ('' + user._id) === ('' + userId));
     const profileIndex = profiles.filter(profile => ('' + profile.userId) === ('' + userId));
@@ -161,7 +160,6 @@ exports.getUserTopTags = async (req, res, next) => {
 
 exports.getTags = async (req, res, next) => {
 
-  console.log(req.query);
   if (req.query.userId) {
     try {
       const tags = await Tag.find({ userId: req.query.userId });
@@ -182,8 +180,6 @@ exports.getTags = async (req, res, next) => {
 }
 
 exports.incTag = async (req, res, next) => {
-
-  console.log(req.body);
 
   let tag;
   const text = req.body.text.toLowerCase();
@@ -304,8 +300,6 @@ exports.getSimilarArtists = async (req, res, next) => {
     if(finalMatchedUserIds.length < maxMatches) {
 
       numMissingProfiles = maxMatches - finalMatchedUserIds.length;
-      console.log('numMissingProfiles', numMissingProfiles)
-
 
       let moreUserIds = [];
       let onlyUserIds = [];

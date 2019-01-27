@@ -1,5 +1,5 @@
 <span *ngFor="let profile of profiles; let i = index">
-<div class="row justify-content-center">
+<div class="row justify-content-center my-3">
     <div class="col-4 col-md-3 col-lg-2">
       <div class="preview-image-cropper app-item-shadow-large">
           <img
@@ -7,6 +7,8 @@
             [src]="profile.imagePath"
             class="preview-image my-2 mx-2"
             style="cursor: pointer;"
+            [id]="profile.artistName"
+            imagePreview
             [title]="profile.artistName">
       </div>
     </div>

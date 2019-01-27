@@ -5,13 +5,16 @@
 </div>
 <div class="row justify-content-center py-2">
   <div class="col-12">
-    <div class="row justify-content-center align-items-center">
+    <div class="row justify-content-center align-items-center" *ngIf="!isLoadingTags">
       <span *ngFor="let tag of tags" class="app-tag-parent-size">
         <span
           class="app-text-1 app-text-small px-3 app-tag-text"
           [ngStyle]="{ 'font-size': getFontSize(tag) }"
           [routerLink]="['/tag', tag.text]">{{ tag.text }}</span>
       </span>
+    </div>
+    <div class="row justify-content-center align-items-center" *ngIf="isLoadingTags">
+      <app-spinner></app-spinner>
     </div>
   </div>
 </div>

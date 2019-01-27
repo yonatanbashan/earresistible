@@ -5,6 +5,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MatDatepickerModule } from '@angular/material/datepicker'
 import { HttpClient } from '@angular/common/http';
+import { Genres } from '../common/genres';
 
 @Component({
   selector: 'app-profile-edit',
@@ -31,6 +32,7 @@ export class ProfileEditComponent implements OnInit {
   currentSubGenres: string[];
   isOtherGenre: boolean = false;
   imagePreview: string;
+  genresInst: Genres;
 
   subGenres: Map<string, string[]>;
 
@@ -38,6 +40,7 @@ export class ProfileEditComponent implements OnInit {
   ngOnInit() {
 
     this.getCountries();
+    this.genresInst = new Genres();
 
     this.route.params.subscribe(params => {
       if (!params['empty']) {
@@ -64,21 +67,22 @@ export class ProfileEditComponent implements OnInit {
       'userImage': new FormControl(null)
     });
 
-    this.genres = ['Rock', 'Pop', 'Hip Hop', 'Jazz', 'Electronic', 'Classical', 'Indie', 'Folk', 'Country'].sort();
+    this.genres = this.genresInst.getGenres();
 
-    this.subGenres = new Map<string, string[]>([
-      ['Rock', ['Alternative Rock', 'Classic Rock', 'Punk Rock', 'Indie Rock', 'Progressive Rock', 'Pop/Rock', 'Hard Rock', 'Heavy Metal', 'Punk', 'Funk Rock']],
-      ['Pop', ['Dream Pop', 'Psychedelic Pop', 'Electronic Pop', 'Dance', 'Dancehall', 'Indie Pop', 'Piano Pop', 'Pop/Rock', 'Synth-pop', 'Singer-Songwriter']],
-      ['Hip Hop', ['R&B', 'Rap', 'Alternative Hip Hop', 'Alternative R&B', 'Gangsta Rap', 'Fusion Hip Hop']],
-      ['Jazz', ['Cool Jazz', 'Jazz Blues', 'Modal Jazz', 'Big Band', 'Fusion', 'Smooth Jazz', 'Contemporary Jazz', 'Hard Bop', 'Avant-garde Jazz', 'Acid Jazz']],
-      ['Electronic', ['Ambient', 'Dub', 'Downtempo', 'Electronica', 'Electronic Indie', 'Synth-pop', 'Trip Hop', 'Minimal', 'Trance', 'House', 'Techno', 'Vaporwave']],
-      ['Indie', ['Indie Rock', 'Indie Folk', 'Electronic Indie', 'Indie Pop', 'Post-Grunge', 'Shoegaze', 'Singer-Songwriter', 'Psychedelic Indie', 'Garage', ]],
-      ['Folk', ['Indie Folk', 'Country', 'Singer-Songwriter', 'Folk', 'Acoustic Folk', 'Psychedelic Folk', 'Ambient Folk']],
 
-    ]);
-
-    // TODO: Get real list
+    // Initial list before going to API
     this.countries = ['Israel', 'USA', 'UK', 'Germany', 'Japan', 'Mexico', 'Spain', 'Turkey'].sort();
+
+    this.http.get('https://restcountries.eu/rest/v2/all').subscribe((responseArray: any) => {
+      this.countries = [];
+      responseArray.forEach(element => {
+        if(element.name.length > 20) {
+          this.countries.push(element.nativeName);
+        } else {
+          this.countries.push(element.name);
+        }
+      });
+    })
 
   }
 
@@ -94,7 +98,7 @@ export class ProfileEditComponent implements OnInit {
 
     if (this.genres.includes(profile.genre)) {
       this.isOtherGenre = false;
-      this.currentSubGenres = this.subGenres.get(profile.genre);
+      this.currentSubGenres = this.genresInst.getSubGenres(profile.genre);
       this.profileEditForm.patchValue({
         genreSelect: profile.genre,
         subGenreSelect: profile.subGenre
@@ -111,7 +115,7 @@ export class ProfileEditComponent implements OnInit {
   }
 
   onSelectGenre(e: Event) {
-    this.currentSubGenres = this.subGenres.get(this.profileEditForm.value.genreSelect);
+    this.currentSubGenres = this.genresInst.getSubGenres(this.profileEditForm.value.genreSelect);
     if (this.profileEditForm.value.genreSelect.includes('Other')) {
       this.isOtherGenre = true;
     } else {

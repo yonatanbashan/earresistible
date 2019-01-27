@@ -67,7 +67,7 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
         }
         this.currentTime = data;
         this.currentTimeFormatted = this.formatTime(parseFloat(this.currentTime));
-        this.progress = (parseFloat(this.currentTime) / parseFloat(this.fullTime) * 100).toString() + '%';
+        this.updateProgress();
         if(this.currentTime === this.fullTime) {
           this.isPaused = true;
         }
@@ -79,6 +79,10 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
         this.fullTimeFormatted = this.formatTime(parseFloat(this.fullTime));
       }
     });
+  }
+
+  updateProgress() {
+    this.progress = (parseFloat(this.currentTime) / parseFloat(this.fullTime) * 100).toString() + '%';
   }
 
   initializePlay() {
@@ -117,9 +121,13 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
 
   playbackSkip(e: Event) {
     if(this.isPlaying) {
-      const time = (<any>e).offsetX / this.playerWidth * parseInt(this.fullTime);
+      if ((<any>e).toElement.offsetWidth < 20) { // To avoid clicking the progress line itself
+        return;
+      }
+      const time = (<any>e).offsetX / (<any>e).toElement.offsetWidth * parseInt(this.fullTime);
       this.playerService.playbackSkip(time);
       this.timeStarted = time;
+      this.updateProgress();
     }
   }
 

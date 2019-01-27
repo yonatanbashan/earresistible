@@ -10,10 +10,13 @@ export class AuthInterceptor implements HttpInterceptor {
   intercept(req: HttpRequest<any>, next: HttpHandler) {
     const authToken = this.appAuthService.getToken();
 
-    // Request has to be cloned before modification
-    const authRequest = req.clone({
-      headers: req.headers.set('Authorization', 'Bearer ' + authToken)
-    });
+    let authRequest = req.clone(); // Request has to be cloned before modification
+
+    if (!req.url.includes('restcountries')) { // Waive auth for 3rd party APIs
+      authRequest = req.clone({
+        headers: req.headers.set('Authorization', 'Bearer ' + authToken)
+      });
+    }
 
     // Pass along the new request
     return next.handle(authRequest);

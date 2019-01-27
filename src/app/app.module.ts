@@ -42,6 +42,7 @@ import { HomeComponent } from './home/home.component';
 import { TopTagsComponent } from './top-tags/top-tags.component';
 import { TagViewComponent } from './tag-view/tag-view.component';
 import { ProfileListComponent } from './profile-list/profile-list.component';
+import { ImagePreviewDirective } from './common/image-preview.directive';
 
 
 let socialConfig = new AuthServiceConfig([
@@ -72,6 +73,7 @@ export function provideConfig() {
     AddSongComponent,
     ConfirmDialogComponent,
     NewlinePipe,
+    ImagePreviewDirective,
     TagsComponent,
     ErrorPageComponent,
     HomeComponent,

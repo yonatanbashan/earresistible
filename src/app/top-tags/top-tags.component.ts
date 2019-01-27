@@ -57,8 +57,8 @@ export class TopTagsComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   getTags(text: string = undefined) {
+    this.isLoadingTags = true;
     if(this.searchSubscription) {
-      this.isLoadingTags = true;
       this.searchSubscription.unsubscribe();
     }
     if(text) {

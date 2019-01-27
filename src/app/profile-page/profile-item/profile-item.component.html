@@ -33,20 +33,23 @@
     (click)="onAddSong(release)">Add Song</button></div>
 </div>
 <div class="container-fluid py-3" *ngIf="!isLoadingSongs">
-  <div class="row" *ngFor="let item of release.items">
-    <div class="col-3">
-      <div class="row app-text-1 app-text-small align-items-center justify-content-end px-2" style="height: 100%;">
+  <div class="row my-3" *ngFor="let item of release.items">
+    <div class="col-3" style="height: 100%;">
+      <div class="row app-text-1 app-text-small justify-content-end px-2 py-0 my-0">
           {{ item.name }}
+      </div>
+      <div class="row app-text-1 app-text-tiny justify-content-end px-2 py-0 my-0">
+        Plays: {{ item.plays }}
       </div>
     </div>
     <div class="col-7">
-      <div class="row align-items-center px-2" style="height: 100%;">
+      <div class="row align-items-center mx-2" style="height: 100%;">
         <app-audio-player [song]=item></app-audio-player>
       </div>
     </div>
     <div class="col-2" *ngIf="isMe">
       <button
-      class="btn btn-primary btn-sm mx-3 my-2 px-0 app-form-btn-text"
+      class="btn btn-primary btn-sm ml-2 mr-0 my-2 px-0 app-form-btn-text"
       (click)="deleteSong(item)"><fa-icon [icon]="faTrash" class="mx-2 app-form-btn-icon"></fa-icon></button>
     </div>
   </div>

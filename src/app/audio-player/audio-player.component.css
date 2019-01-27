@@ -1,0 +1,54 @@
+.app-song-progress-bar {
+  width: 500px;
+  height: 15px;
+  background: #666666;
+  cursor: pointer;
+}
+@media screen and (min-width: 992px) and (max-width: 1100px) {
+  .app-song-progress-bar {
+    width: 350px;
+  }
+}
+@media screen and (min-width: 768px) and (max-width: 992px) {
+  .app-song-progress-bar {
+    width: 190px;
+  }
+}
+@media screen and (min-width: 576px) and (max-width: 768px) {
+  .app-song-progress-bar {
+    width: 130px;
+  }
+}
+@media screen and (max-width: 576px) {
+  .app-song-progress-bar {
+    width: 80px;
+  }
+}
+
+.app-song-progress-row {
+  width: 470px;
+}
+@media screen and (min-width: 768px) and (max-width: 992px) {
+  .app-song-progress-row {
+    width: 330px;
+  }
+}
+@media screen and (min-width: 576px) and (max-width: 768px) {
+  .app-song-progress-row {
+    width: 230px;
+  }
+}
+@media screen and (max-width: 576px) {
+  .app-song-progress-row {
+    width: 180px;
+  }
+}
+
+
+.app-song-location-bar {
+  height: 15px;
+  width: 3px;
+  background: #8888CC;
+  box-shadow: 0 0 3px 3px #BBBBFF;
+  position: absolute;
+}
